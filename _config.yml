@@ -1,0 +1,46 @@
+# Site wide configuration
+
+title: "goywzl's Tech Blog"
+description: "Record I've used technology"
+logo: logo.jpg # 120x120 px default image used for Twitter summary card
+teaser: /teaser/default.jpg # 400x250 px default teaser image used in image archive grid
+locale:
+url:
+
+default:
+    -
+        scope:
+            type: "article"
+        values:
+            ads: false
+            toc: false 
+
+
+# Jekyll configuration
+
+sass:
+    sass_dir: _sass
+    style: compressed
+permalink: /:categories/:title/
+markdown: kramdown
+kramdown:
+    input: GFM
+highlighter: pygments
+gems:
+  - jekyll-sitemap
+
+
+# Site owner
+owner: 
+  name: goywzl
+  email: xiaohui920@sina.cn
+  twitter: goywzl
+  google:
+    ad-client:
+    ad-slot:
+  bio: 
+  avatar: logo.jpg # 160x160 px image for author byline
+disqus-shortname: goywzl
+
+
+exclude: ["lib", "config.rb", ".sass-cache", "Capfile", "config", "log", "Rakefile", "Rakefile.rb", "tmp", "*.sublime-project", "*.sublime-workspace", "Gemfile", "Gemfile.lock", "README.md", "LICENSE", "node_modules", "Gruntfile.js", "package.json"]

@@ -6,16 +6,16 @@
   image:
 
 - title: Linux
-  url: /Linux/
+  url: /linux/
 
 - title: Server
-  url: /Server/
+  url: /server/
 
 - title: Shell
-  url: /Shell/
+  url: /shell/
 
 - title: Python
-  url: /Python/
+  url: /python/
 
 - title: About
-  url: /About/
+  url: /about/

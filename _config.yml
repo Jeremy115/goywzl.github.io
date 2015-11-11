@@ -2,8 +2,8 @@
 
 title:
 description:
-logo: # 120x120 px default image used for Twitter summary card
-teaser: # 400x250 px default teaser image used in image archive grid
+logo: logo.jpg# 120x120 px default image used for Twitter summary card
+teaser: teaser.jpg # 400x250 px default teaser image used in image archive grid
 locale:
 url:
 
@@ -22,9 +22,9 @@ gems:
 
 # Site owner
 owner:
-  name:
-  email:
-  twitter:
+  name: goywzl
+  email: xiaohui920@sina.cn
+  twitter: goywzl
   google:
     ad-client: 
     ad-slot: 

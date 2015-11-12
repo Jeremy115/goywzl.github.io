@@ -24,7 +24,7 @@
 	@include transition(right 500ms cubic-bezier(.645,.045,.355,1.000));
 	&.slide {
 		@include media($medium) {
-			right: 20%;
+			right: 90%;
 		}
 		@include transition(right 500ms ease-in-out);
 	}
@@ -74,7 +74,7 @@
 			text-decoration: none;
 		}
 		.teaser {
-			width: 150px;
+			width: 30px;
 			border: 2px solid $white;
 			margin-bottom: ($gutter / 2);
 			@include media($medium) {

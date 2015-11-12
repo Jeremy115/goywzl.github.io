@@ -24,7 +24,7 @@
 	@include transition(right 500ms cubic-bezier(.645,.045,.355,1.000));
 	&.slide {
 		@include media($medium) {
-			right: 90%;
+			right: 20%;
 		}
 		@include transition(right 500ms ease-in-out);
 	}

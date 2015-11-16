@@ -1,33 +1,20 @@
 # Site wide configuration
 
-title: "Goywzl's Tech Blog"
-description: "My operations of the road"
-logo: logo.jpg # 120x120 px default image used for Twitter summary card
-teaser: /teaser/default.jpg # 400x250 px default teaser image used in image archive grid
+title:
+description:
+logo: # 120x120 px default image used for Twitter summary card
+teaser: # 400x250 px default teaser image used in image archive grid
 locale:
 url:
 
 # Jekyll configuration
-
-default:
-    -
-        scope:
-            type: "article"
-        values:
-            ads: false
-            toc: false 
-
-
-# Jekyll configuration
-
 
 sass:
     sass_dir: _sass
     style: compressed
 permalink: /:categories/:title/
 kramdown:
-#  toc_levels: 1..2
-        input: GFM
+  toc_levels: 1..2
 highlighter: pygments
 gems:
   - jekyll-sitemap
@@ -35,15 +22,15 @@ gems:
 
 # Site owner
 owner:
-  name: goywzl
-  email: xiaohui920@sina.cn
-  twitter: goywzl
+  name:
+  email:
+  twitter:
   google:
     ad-client: 
     ad-slot: 
   bio: 
-  avatar: logo.jpg # 160x160 px image for author byline
-  disqus-shortname: goywzl
+  avatar: bio-photo.jpg # 160x160 px image for author byline
+  disqus-shortname:
 
 
 exclude: ["lib", "config.rb", ".sass-cache", "Capfile", "config", "log", "Rakefile", "Rakefile.rb", "tmp", "*.sublime-project", "*.sublime-workspace", "Gemfile", "Gemfile.lock", "README.md", "LICENSE", "node_modules", "Gruntfile.js", "package.json"]

@@ -3,7 +3,7 @@
 title: "Goywzl's Tech Blog"
 description: "My operations of the road"
 logo:  logo.jpg # 120x120 px default image used for Twitter summary card
-teaser: teaser.jpg # 400x250 px default teaser image used in image archive grid
+teaser: /teaser/default.jpg # 400x250 px default teaser image used in image archive grid
 locale:
 url:
 
@@ -29,8 +29,8 @@ owner:
     ad-client: 
     ad-slot: 
   bio: 
-  avatar: bio-photo.jpg # 160x160 px image for author byline
-  disqus-shortname:
+  avatar: logo.jpg # 160x160 px image for author byline
+  disqus-shortname: goywzl
 
 
 exclude: ["lib", "config.rb", ".sass-cache", "Capfile", "config", "log", "Rakefile", "Rakefile.rb", "tmp", "*.sublime-project", "*.sublime-workspace", "Gemfile", "Gemfile.lock", "README.md", "LICENSE", "node_modules", "Gruntfile.js", "package.json"]

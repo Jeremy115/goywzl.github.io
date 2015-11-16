@@ -5,17 +5,17 @@
   excerpt:
   image:
 
-- title: Linux
+- title: linux
   url: /linux/
 
-- title: Server
+- title: server
   url: /server/
 
-- title: Shell
+- title: shell
   url: /shell/
 
-- title: Python
+- title: python
   url: /python/
 
-- title: About
+- title: about
   url: /about/

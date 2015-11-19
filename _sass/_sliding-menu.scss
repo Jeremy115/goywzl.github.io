@@ -9,10 +9,10 @@
 .slide {
     transform: translateX(-100%);
     @include media($medium) {
-      transform: translateX(em(-600));
+      transform: translateX(em(-300));
     }
     @include media($large) {
-      transform: translateX(em(-900));
+      transform: translateX(em(-300));
     }
   }
 
@@ -46,10 +46,10 @@
    background: $black;
     transform: translateX(0); /* don't slide close button on small screens only */
     @include media($medium) {
-      transform: translateX(em(-600)); /* reset slide position */
+      transform: translateX(em(-300)); /* reset slide position */
     }
     @include media($large) {
-      transform: translateX(em(-900)); /* reset slide position */
+      transform: translateX(em(-300)); /* reset slide position */
     }
   }
 }
@@ -68,10 +68,10 @@
   text-align: left;
   @include size(100% 100%);
   @include media($small) {
-    width: em(600);
+    width: em(300);
   }
   @include media($large) {
-    width: em(900);
+    width: em(300);
   }
   transform: translateX(100%);
   transition: $sliding-menu-animation;
@@ -90,9 +90,9 @@
       margin-right: 20%;
     }
     color: $white;
-    @include font-size(14);
+    @include font-size(32,no,1);
     @include media($small) {
-      @include font-size(16);
+      @include font-size(48,no,1);
     }
     span {
       display: block;
@@ -152,7 +152,7 @@
       @include font-size(24,no);
       font-weight: 700;
       @include media($small) {
-        margin-left: 170px;
+        margin-left: 55px;
         @include font-size(32,no);
       }
     }

@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: article
 title:  "Centos的时间解说"
 date:   2015-11-20 15:34:30 +0800
 categories: home

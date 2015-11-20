@@ -1,4 +1,11 @@
-# **Centos的时间解说** #
+---
+layout: post
+title:  "Centos的时间解说"
+date:   2015-11-20 15:34:30 +0800
+categories: home
+---
+
+
 
 时间：2014年的文档
 

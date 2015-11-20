@@ -17,6 +17,9 @@ layout: default
 			<h1>{{ page.title }}</h1>
 		</div>
 		<div class="inner-wrap">
+            		{% if page.toc %}
+			<nav class="toc"></nav><!-- /.toc -->
+            		{% endif %}
 			<div id="content" class="page-content" itemprop="articleBody">
 				{{ content }}
 				<hr />
@@ -25,16 +28,30 @@ layout: default
 					{% if page.share != false %}{% include share-this.html %}{% endif %}
 					{% include page-meta.html %}
 				</footer><!-- /.footer -->
+		                {% include add-this.html %}
 				<aside>
-					{% if page.comments == true %}{% include comments.html %}{% endif %}
+					{% include comments.html %}
 				</aside>
 			</div><!-- /.content -->
 		</div><!-- /.inner-wrap -->
-		{% if page.ads == true %}<div class="ads">{% include advertising.html %}</div><!-- /.ads -->{% endif %}
+		<!-- {% if page.ads == true %}<div class="ads">{% include advertising.html %}</div><!-- /.ads -->{% endif %} -->
+		<!--<div class="ads">{% include about-me.html %}</div> -->
 	</article><!-- ./wrap -->
 </div><!-- /#main -->
 
-<div id="disqus_thread"></div>
+{% include env.html %}
+{% if env == null or env != 'staging' %}
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-58172430-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
     <script>
     /**
      *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
@@ -55,4 +72,4 @@ layout: default
             (d.head || d.body).appendChild(s);
         })();
     </script>
-    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+{% endif %}

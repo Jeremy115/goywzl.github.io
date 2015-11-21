@@ -5,7 +5,6 @@ date:   2015-11-20 15:34:30 +0800
 categories: home
 ---
 
-# Centos的主机名 #
 
 时间：2014年
 环境：centos系统

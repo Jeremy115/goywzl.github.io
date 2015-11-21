@@ -1,7 +1,7 @@
 ---
 layout: article
 title:  "Centos的主机名"
-date:   2015-11-20 15:34:30 +0800
+date:   2015-11-21 15:34:30 +0800
 categories: home
 ---
 

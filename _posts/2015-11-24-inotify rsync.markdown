@@ -1,4 +1,3 @@
-
 ---
 layout: article
 title:  "文件实时同步inotify+rsync"

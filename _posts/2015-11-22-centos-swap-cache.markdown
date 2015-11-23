@@ -2,7 +2,7 @@
 layout: article
 title:  "CentOS下缓存"
 date:   2015-11-22 15:34:30 +0800
-categories: home
+categories: home linux
 ---
 
 

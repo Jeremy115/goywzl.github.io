@@ -1,0 +1,219 @@
+---
+layout: article
+title:  "rsync"
+date:   2015-11-25 09:20:00 +0800
+categories: home server
+---
+
+rsync（remote synchronize）是一个快速增量文件传输软件，它在同步文件的同时，可以保持原来文件的权限、时间、软硬链接等附加信息。
+
+特点：
+ 
+1. 有选择性的保持符号链接、硬链接、文件属于、权限、设备以及时间等
+2. 能更新整个目录和树和文件系统
+3. 对于安装来说，没有特殊的要求
+4. 对于多个文件来说，内部流水线减少文件等待的延时
+5. 可以使用rsh、ssh或直接端口作为传输入端口
+6. 支持匿名rsync同步文件
+
+
+----------
+
+
+# 一、安装rsync #
+
+## 1、源码包安装 ##
+
+    [root@localhost ~]# mkdir /data/ftpdata
+    
+    [root@localhost ~]# wget http://rsync.samba.org/ftp/rsync/rsync-3.1.1.tar.gz
+
+    [root@localhost ~]# tar -zxvf rsync-3.1.1.tar.gz
+    
+    [root@localhost ~]# ./configure --prefix=/usr/local/rsync
+    
+    [root@localhost ~]# make && make install
+
+我比较喜欢源码包安装，我认为这样能跟好的管理
+
+## 2.linux发行版收录内的下载安装 ##
+    
+    sudo apt-get install rsync  在debian、ubuntu等在线安装
+    
+    yum install rsync 在Redhat、Centos等在线安装
+    
+    rpm -ivh rsync  在Redhat、Centos等rpm包安装
+
+这样的安装比较简单，安装过程中缺少什么工具，系统会自动安装。
+
+---------
+
+# 二、配置rsync #
+
+rsync主要有三个配置文件，可怜的是，这三个文件都需要自己创建，是不是很逗，我刚开始也是很蒙，不过，这样更加的可以随性配置,我喜欢东西都放一块，所以就在rsync的安装目录，创建了一个目录放这三个文件
+
+	mkdir /usr/local/rsync/etc
+
+
+## 1.首先说我们的主配置文件rsyncd.conf ##
+
+	touch /usr/local/rsync/etc/rsyncd.conf
+
+文件内容如下：
+
+    # Minimal configuration file for rsync daemon
+    # See rsync(1) and rsyncd.conf(5) man pages for help
+     
+    # This line is required by the /etc/init.d/rsyncd script
+    pid file = /var/run/rsyncd.pid   
+    port = 873
+    address = 192.168.1.7
+   
+    uid = root   
+    gid = root   
+     
+    use chroot = yes 
+    read only = no 
+     
+     
+    #limit access to private LANs
+    hosts allow=192.168.1.0/255.255.255.0 10.0.1.0/255.255.255.0 
+    hosts deny=*
+     
+    max connections = 5
+    motd file = /etc/rsyncd/rsyncd.motd
+     
+    #This will give you a separate log file
+    #log file = /var/log/rsync.log
+     
+    #This will log every file transferred - up to 85,000+ per user, per sync
+    #transfer logging = yes
+     
+    log format = %t %a %m %f %b
+    syslog facility = local3
+    timeout = 300
+     
+    [data]   
+    path = /data   
+    list=yes
+    ignore errors
+    auth users = root
+    secrets file = /usr/local/rsync/etc/rsyncd.secrets 
+    comment = root data 
+    exclude =   test/  download/
+     
+    [beinan]
+    path = /opt
+    list=no
+    ignore errors
+    comment = optdir   
+    auth users = test2
+    secrets file = /usr/local/rsync/etc/rsyncd.secrets
+
+对配置文件做一下详解
+
+	pid file    指定pid进程写到次文件位置
+	port    指定端口
+	address     指定服务器ip
+	uid  gid     指定用户与组
+	use chroot    是否将服务器守护程序chroot到文件系统钟的目录中，保护系统被安装漏洞侵袭的可能，需要超级用户权限，对符号链接文件排除在外。
+	read only     只读选择，是否让客户端上传文件到服务器上，另外有一个write only选项
+	hosts allow    允许某IP或者某IP段访问
+	hosts deny     拒绝某IP或者某IP段访问
+	max connections    客户端最大连接数
+	motd file    指定服务器自定义信息文件
+	log file    服务器的日志文件位置
+	transfer logging    这是传输文件的日志
+	[data]     这里指定链接的名字，自行更改即可
+	path      指定要同步文件目录的位置
+	auth users    认证用户，必需是服务器上存在的用户
+	list      服务器上提供同步的数据目录在服务器模块上是否显示出来
+	ignore errors     忽略IO错误
+	secrets file   用户密码存放文件位置
+	comment   注释而已，自己随便写
+	exclude    这是排除的意思，就说/data/目录下的这些目录排除在外,两个中间有空格
+
+## 2.然后说一下我们的密码文件rsyncd.secrets ##
+
+	touch /usr/local/rsync/etc/rsyncd.secrets
+	chmod 600 /usr/local/rsync/etc/rsyncd.secrets
+	
+添加文件内容
+	
+	root:111111
+	test2:222222
+
+这里简单解释一下文件，其中root用户是系统管理员用户，密码是11111，但是你的登录密码可以不是这个，也就是说，这里的11111是你随便写得，不用是真正的root密码，下面的test2也是，但系统里要有这个用户
+
+
+## 3.最后说一下可有可无的服务器信息文件rsyncd.motd ##
+
+	touch /usr/local/rsync/etc/rsyncd.motd
+
+文件内容如下
+    
+    +++++++++++++++++++++++++++
+    + 192.168.1.7  rsync 2015 +
+    +++++++++++++++++++++++++++
+
+这里定义的是rsync的服务器信息，也就是用户登录的时候会看到的信息
+
+这个文件不是必需存在的，你可以删除，为了美观也可以留着，为了以后rsync服务器过多，也可以留着
+
+---------
+
+# 三、最后的配置 #
+
+## 1.启动rsync服务端 ##
+
+以上都配置完成之后，就可以启动了，启动命令如下：
+
+	/usr/local/rsync/bin/rsync --daemon --config=/usr/local/rsync/etc/rsyncd.conf
+
+其中--daemon是让rsync以服务器的模式启动，--config是指定配置文件位置
+
+
+## 2.防火墙iptables允许rsync进行通讯 ##
+
+因为rsync使用的873端口，所以在iptables方面也要进行允许的操作
+
+命令如下：
+
+	iptables -A INPUT -p tcp -m state --state NEW  -m tcp --dport 873 -j ACCEPT
+
+## 3.客户端同步数据 ##
+
+客户端也要安装rsync，不过不需要创建三个文件了
+
+安装方法上面也已经介绍过，下面是同步命令
+
+	/usr/local/rsync/bin/rsync -avzP root@192.168.1.7::data  data
+
+之后会让你输入密码，这里写上密码配置文件中记载的11111即可，不用输入root的登录密码
+
+这条命令的意思是，用root用户登录到服务器上，把data数据同步到本地的data目录下，如果没有data目录，系统会自动创建
+
+参数说明：
+
+    -a 参数，相当于-rlptgoD，
+    -r 是递归 
+    -l 是链接文件，意思是拷贝链接文件；
+    -p 表示保持文件原有权限；
+    -t 保持文件原有时间；
+    -g 保持文件原有用户组；
+    -o 保持文件原有属主；
+    -D 相当于块设备文件；
+    -z 传输时压缩；
+    -P 传输进度；
+    -v 传输时的进度等信息，和-P有点关系，自己试试。可以看文档；
+
+重点参数说明：
+
+**--delete**表示客户端上的数据要与服务器端完全一致，如果 data目录中有服务器上不存在的文件，则删除。最终目的是让data目录上的数据完全与服务器上保持一致；用的时候要小心点，最好不要把已经有重要数所据的目录，当做本地更新目录，否则会把你的数据全部删除；
+
+**–password-file=rsyncd.secrets**  这是指定当我们以root用户登录rsync服务器同步数据时，密码将读取 rsync.secrets 这个文件。这个文件内容只是root用户的密码。这样就不用输入密码，直接读取文件了
+
+加入crontab，使其定时同步数据，命令我就不用做介绍了，都懂得。
+
+
+

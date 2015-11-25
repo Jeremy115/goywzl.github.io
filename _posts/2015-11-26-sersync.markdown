@@ -1,0 +1,109 @@
+---
+layout: article
+title:  "sersync"
+date:   2015-11-26 09:20:00 +0800
+categories: home server
+---
+
+前面介绍了rsync，并且也介绍了通过文件实时同步的inotify+rsync，这里也说一下另外一个服务器同步工具sersync。
+
+原理：使用 Linux 2.6 内核的 inotify 监控 Linux 文件系统事件，sersync 仅仅同步发生增、删、改事件的单个文件或目录，不像rsync镜像同步那样需要比对双方服务器整个目录下数千万的文件，并且支持多线程同步，因此效率非常高。
+
+特点：
+
+1.sersync是用c++编写，并且可以对文件系统产生的临时文件和重复文件进行过滤操作，结合rsync就更好的实现同步了。
+
+2.本项目相比较其他脚本开源项目，使用多线程进行同步，尤其在同步较大文件时，能够保证多个服务器实时保持同步状态。
+
+3.本项目自带crontab功能，只需在xml配置文件中开启，即可按您的要求，隔一段时间整体同步一次。无需再额外配置crontab功能。
+
+4.有出错处理机制，通过失败队列对出错的文件重新同步，如果仍旧失败，则每10个小时对同步失败的文件重新同步
+
+
+
+----------
+
+# 这套工具的安装 #
+
+首先是[安装rsync](http://www.goywzl.com/home/server/rsync/)，这个我在之前的文章也介绍过了，这里就不再多讲。
+
+然后安装sersync
+
+	wget https://sersync.googlecode.com/files/sersync2.5.4_64bit_binary_stable_final.tar.gz
+	makdir /usr/local/sersync
+	tar -zxvf sersync2.5.4_64bit_binary_stable_final.tar.gz
+	mv GNU-Linux-x86/* /usr/local/sersync
+
+到这里就是安装完成了，都是文件而已
+
+# 配置sersync #
+
+同样，先创建密码文件
+
+	echo "111111" >/usr/local/sersync/rsync.secrets
+	chmod 600 /usr/local/sersync/rsync.secrets
+
+然后就是重头戏，conf配置文件
+
+    <filter start=”true”>
+    	<exclude expression="(.*)\.svn"></exclude>
+    	<exclude expression="(.*)\.gz"></exclude>
+    	<exclude expression="^info/*"></exclude>
+    	<exclude expression="^static/*"></exclude>
+    <!—监控事件的过程中过滤特定文件，和特定文件夹的文件 –>
+    </filter>
+ 
+    <inotify>
+    	<delete start=”true”/>
+    	<createFolder start=”true”/>
+    	<createFile start=”true”/>
+    	<closeWrite start=”true”/>
+    	<moveFrom start=”true”/>
+    	<moveTo start=”true”/>
+    	<attrib start=”false”/>
+    	<modify start=”true”/>
+    <!—设置要监控的操作 –>
+    </inotify>
+     
+    <sersync>
+    	<localpath watch=”/data”>
+    <!—设置要监控的目录 –>
+    	<remote ip=”192.168.1.7” name=”data”/>
+    <!—指定远端rsync服务器的地址和模块名 –>
+    </localpath>
+
+    <rsync>
+    	<commonParams params=”-artuz”/>
+    	<auth start=”true” users=”root” passwordfile=”/usr/local/sersync/rsync.secrets”/>
+    <!—是否启用验证，指定同步用户以及密码存放文件 –>
+    </rsync>
+
+
+    <crontab start="false" schedule="600"><!--600mins-->
+	<!-开启crontab功能->
+        <crontabfilter start="false">
+            <exclude expression="*.php"></exclude>
+            <exclude expression="info/*"></exclude>
+			<!-设置要过滤的文件后缀->
+        </crontabfilter>
+    </crontab>
+
+
+大概就是这样，修改一下就好，我就写了一部分，多余的大神都看得懂，小白就谷歌一下吧，我也是用到多少记多少
+
+# sersync的命令介绍 #
+
+你刚才也看到了，解压出来的sersync就两个文件，一个配置文件，另外一个就是启动文件
+
+这里有几个参数，我做一下简单的介绍
+
+	--help   查看帮助
+	-d  使sersync在后台运行，开启实时同步
+	-r  运行前，将已经存在的所有文件或目录全部同步到远程
+	-o confxml.xml   指定使用的配置文件位置，如果同步多个目录，只要多几个配置文件，设置不通目录，执行多次命令
+	-n num    指定使用的线程总数，默认线程池是10
+	-m pluginName   不尽兴同步，只运行此名字插件
+
+这样就可以进行实时同步了，并且设置到开机启动文件(/etc/rc.local)中，就可达到开机自动启动
+
+本文参考网站：https://code.google.com/p/sersync/

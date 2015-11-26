@@ -50,10 +50,8 @@ categories: home linux
 
 {% highlight bash %}
 {% raw %}
-
-    date "+%Y-%m-%d %H:%M:%S" 
-    2015-11-20 13:41:05
-
+date "+%Y-%m-%d %H:%M:%S" 
+2015-11-20 13:41:05
 {% endraw %}
 {% endhighlight %}
 
@@ -62,8 +60,8 @@ categories: home linux
 {% highlight bash %}
 {% raw %}
 
-    date "+%Y-%m-%d %H:%M:%S" -d "-2 year"
-    2013-11-20 13:45:30
+date "+%Y-%m-%d %H:%M:%S" -d "-2 year"
+2013-11-20 13:45:30
 
 {% endraw %}
 {% endhighlight %}
@@ -73,9 +71,9 @@ categories: home linux
 {% highlight bash %}
 {% raw %}
 
-    time=`date "+%s"`
-    1447998474
-    
+time=`date "+%s"`
+1447998474   
+
 {% endraw %}
 {% endhighlight %}
 
@@ -86,9 +84,9 @@ categories: home linux
 {% highlight bash %}
 {% raw %}
 
-    date -s "2015-11-18 11:12:00"
-    date -s "20151118 11:12:00"
-    date -s "2015/11/18 11:12:00"
+date -s "2015-11-18 11:12:00"
+date -s "20151118 11:12:00"
+date -s "2015/11/18 11:12:00"
 
 {% endraw %}
 {% endhighlight %}
@@ -116,7 +114,7 @@ categories: home linux
 {% highlight bash %}
 {% raw %}
 
-    rdate -s ntp.sjtu.edu.cn
+rdate -s ntp.sjtu.edu.cn
 
 {% endraw %}
 {% endhighlight %}
@@ -128,7 +126,7 @@ categories: home linux
 {% highlight bash %}
 {% raw %}
 
-    ntpdate ntp.sjtu.edu.cn
+ntpdate ntp.sjtu.edu.cn
 
 {% endraw %}
 {% endhighlight %}
@@ -151,7 +149,7 @@ categories: home linux
 {% highlight bash %}
 {% raw %}
 
-	yum install -y xinetd rdate
+yum install -y xinetd rdate
 
 {% endraw %}
 {% endhighlight %}
@@ -161,7 +159,7 @@ categories: home linux
 {% highlight bash %}
 {% raw %}
 
-	disable = yes  改为  disable = no
+disable = yes  改为  disable = no
 
 {% endraw %}
 {% endhighlight %}
@@ -171,7 +169,7 @@ categories: home linux
 {% highlight bash %}
 {% raw %}
 
-	service xinetd start
+service xinetd start
 
 {% endraw %}
 {% endhighlight %}
@@ -181,7 +179,7 @@ categories: home linux
 {% highlight bash %}
 {% raw %}
 
-	rdate -s ip
+rdate -s ip
 
 {% endraw %}
 {% endhighlight %}

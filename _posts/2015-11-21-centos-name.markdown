@@ -26,7 +26,7 @@ Linux 安装好后，其默认的主机名是 localhost（当然，如果你安�
 {% highlight bash %}
 {% raw %}
 
-	hostname new-hostname
+hostname new-hostname
 
 {% endraw %}
 {% endhighlight %}
@@ -40,7 +40,7 @@ Linux 安装好后，其默认的主机名是 localhost（当然，如果你安�
 {% highlight bash %}
 {% raw %}
 
-	HOSTNAME=new-hostname.domainname
+HOSTNAME=new-hostname.domainname
 
 {% endraw %}
 {% endhighlight %}
@@ -50,8 +50,8 @@ Linux 安装好后，其默认的主机名是 localhost（当然，如果你安�
 {% highlight bash %}
 {% raw %}
 
-	NETWORKING=yes
-	HOSTNAME=new-hostname.localdomain
+NETWORKING=yes
+HOSTNAME=new-hostname.localdomain
 
 {% endraw %}
 {% endhighlight %}
@@ -67,8 +67,8 @@ Linux 安装好后，其默认的主机名是 localhost（当然，如果你安�
 {% highlight bash %}
 {% raw %}
 
-	127.0.0.1  localhost.localdomain localhost
-	127.0.0.1  new-hostname.localdomain new-hostname
+127.0.0.1  localhost.localdomain localhost
+127.0.0.1  new-hostname.localdomain new-hostname
 
 {% endraw %}
 {% endhighlight %}

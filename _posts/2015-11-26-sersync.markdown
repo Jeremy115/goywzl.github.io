@@ -32,10 +32,13 @@ categories: home server
 {% highlight bash %}
 {% raw %}
 
-	wget https://sersync.googlecode.com/files/sersync2.5.4_64bit_binary_stable_final.tar.gz
-	makdir /usr/local/sersync
-	tar -zxvf sersync2.5.4_64bit_binary_stable_final.tar.gz
-	mv GNU-Linux-x86/* /usr/local/sersync
+wget https://sersync.googlecode.com/files/sersync2.5.4_64bit_binary_stable_final.tar.gz
+
+makdir /usr/local/sersync
+
+tar -zxvf sersync2.5.4_64bit_binary_stable_final.tar.gz
+
+mv GNU-Linux-x86/* /usr/local/sersync
 
 {% endraw %}
 {% endhighlight %}
@@ -49,8 +52,9 @@ categories: home server
 {% highlight bash %}
 {% raw %}
 
-	echo "111111" >/usr/local/sersync/rsync.secrets
-	chmod 600 /usr/local/sersync/rsync.secrets
+echo "111111" >/usr/local/sersync/rsync.secrets
+
+chmod 600 /usr/local/sersync/rsync.secrets
 
 {% endraw %}
 {% endhighlight %}
@@ -60,48 +64,48 @@ categories: home server
 {% highlight bash %}
 {% raw %}
 
-    <filter start=”true”>
-    	<exclude expression="(.*)\.svn"></exclude>
-    	<exclude expression="(.*)\.gz"></exclude>
-    	<exclude expression="^info/*"></exclude>
-    	<exclude expression="^static/*"></exclude>
-    <!—监控事件的过程中过滤特定文件，和特定文件夹的文件 –>
-    </filter>
+<filter start=”true”>
+	<exclude expression="(.*)\.svn"></exclude>
+	<exclude expression="(.*)\.gz"></exclude>
+	<exclude expression="^info/*"></exclude>
+	<exclude expression="^static/*"></exclude>
+<!—监控事件的过程中过滤特定文件，和特定文件夹的文件 –>
+</filter>
  
-    <inotify>
-    	<delete start=”true”/>
-    	<createFolder start=”true”/>
-    	<createFile start=”true”/>
-    	<closeWrite start=”true”/>
-    	<moveFrom start=”true”/>
-    	<moveTo start=”true”/>
-    	<attrib start=”false”/>
-    	<modify start=”true”/>
-    <!—设置要监控的操作 –>
-    </inotify>
+<inotify>
+	<delete start=”true”/>
+	<createFolder start=”true”/>
+	<createFile start=”true”/>
+	<closeWrite start=”true”/>
+	<moveFrom start=”true”/>
+	<moveTo start=”true”/>
+	<attrib start=”false”/>
+	<modify start=”true”/>
+<!—设置要监控的操作 –>
+</inotify>
      
-    <sersync>
-    	<localpath watch=”/data”>
-    <!—设置要监控的目录 –>
-    	<remote ip=”192.168.1.7” name=”data”/>
-    <!—指定远端rsync服务器的地址和模块名 –>
-    </localpath>
+<sersync>
+	<localpath watch=”/data”>
+<!—设置要监控的目录 –>
+	<remote ip=”192.168.1.7” name=”data”/>
+<!—指定远端rsync服务器的地址和模块名 –>
+</localpath>
 
-    <rsync>
-    	<commonParams params=”-artuz”/>
-    	<auth start=”true” users=”root” passwordfile=”/usr/local/sersync/rsync.secrets”/>
-    <!—是否启用验证，指定同步用户以及密码存放文件 –>
-    </rsync>
+<rsync>
+	<commonParams params=”-artuz”/>
+	<auth start=”true” users=”root” passwordfile=”/usr/local/sersync/rsync.secrets”/>
+<!—是否启用验证，指定同步用户以及密码存放文件 –>
+</rsync>
 
 
-    <crontab start="false" schedule="600"><!--600mins-->
+<crontab start="false" schedule="600"><!--600mins-->
 	<!-开启crontab功能->
-        <crontabfilter start="false">
-            <exclude expression="*.php"></exclude>
-            <exclude expression="info/*"></exclude>
-			<!-设置要过滤的文件后缀->
-        </crontabfilter>
-    </crontab>
+	<crontabfilter start="false">
+	<exclude expression="*.php"></exclude>
+	<exclude expression="info/*"></exclude>
+<!-设置要过滤的文件后缀->
+</crontabfilter>
+</crontab>
 
 {% endraw %}
 {% endhighlight %}

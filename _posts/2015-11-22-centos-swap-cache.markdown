@@ -17,7 +17,7 @@ categories: home linux
 {% highlight bash %}
 {% raw %}
 
-    swapoff -a
+swapoff -a
 
 {% endraw %}
 {% endhighlight %}
@@ -29,7 +29,7 @@ categories: home linux
 {% highlight bash %}
 {% raw %}
 
-    swapon -a
+swapon -a
 
 {% endraw %}
 {% endhighlight %}
@@ -41,7 +41,7 @@ categories: home linux
 {% highlight bash %}
 {% raw %}
 
-    swapoff -a && swapon -a
+swapoff -a && swapon -a
 
 {% endraw %}
 {% endhighlight %}
@@ -72,9 +72,11 @@ cache清理：
 {% highlight bash %}
 {% raw %}
 
-    sync; sync; sync;&& echo3 >/proc/sys/vm/drop_caches
-    sleep 2
-	echo 0>/proc/sys/vm/drop_caches
+sync; sync; sync;&& echo3 >/proc/sys/vm/drop_caches
+
+sleep 2
+
+echo 0>/proc/sys/vm/drop_caches
 
 {% endraw %}
 {% endhighlight %}
@@ -85,7 +87,7 @@ To free pagecache：
 {% highlight bash %}
 {% raw %}
 
-    echo 1>/proc/sys/vm/drop_caches
+echo 1>/proc/sys/vm/drop_caches
 
 {% endraw %}
 {% endhighlight %}
@@ -95,7 +97,7 @@ To free dentries and inodes：
 {% highlight bash %}
 {% raw %}
 
-    echo 2>/proc/sys/vm/drop_caches
+echo 2>/proc/sys/vm/drop_caches
 
 {% endraw %}
 {% endhighlight %}
@@ -105,7 +107,7 @@ To free pagecache,dentries and inodes：
 {% highlight bash %}
 {% raw %}
 
-    echo 3>/proc/sys/vm/drop_caches
+echo 3>/proc/sys/vm/drop_caches
 
 {% endraw %}
 {% endhighlight %}

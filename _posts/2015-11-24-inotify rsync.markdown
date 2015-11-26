@@ -17,11 +17,11 @@ Inotify+rsync组合，采用系统级别监控各种变化，当Inotify监控到
 {% highlight bash %}
 {% raw %}
 
-    [root@localhost ~]# mkdir /data/ftpdata
+[root@localhost ~]# mkdir /data/ftpdata
     
-    [root@localhost ~]# wget http://rsync.samba.org/ftp/rsync/rsync-3.1.1.tar.gz
+[root@localhost ~]# wget http://rsync.samba.org/ftp/rsync/rsync-3.1.1.tar.gz
     
-    [root@localhost ~]# wget http://github.com/downloads/rvoicilas/inotify-tools/inotify-tools-3.14.tar.gz
+[root@localhost ~]# wget http://github.com/downloads/rvoicilas/inotify-tools/inotify-tools-3.14.tar.gz
 
 
 {% endraw %}
@@ -32,11 +32,11 @@ Inotify+rsync组合，采用系统级别监控各种变化，当Inotify监控到
 {% highlight bash %}
 {% raw %}
 
-    [root@localhost ~]# tar -zxvf rsync-3.1.1.tar.gz
+[root@localhost ~]# tar -zxvf rsync-3.1.1.tar.gz
     
-    [root@localhost ~]# ./configure --prefix=/usr/local/rsync
+[root@localhost ~]# ./configure --prefix=/usr/local/rsync
     
-    [root@localhost ~]# make && make install
+[root@localhost ~]# make && make install
 
 {% endraw %}
 {% endhighlight %}
@@ -46,11 +46,11 @@ Inotify+rsync组合，采用系统级别监控各种变化，当Inotify监控到
 {% highlight bash %}
 {% raw %}
     
-    [root@localhost ~]# echo "pasword">/etc/rsyncd.secrets
+[root@localhost ~]# echo "pasword">/etc/rsyncd.secrets
     
-    [root@localhost ~]# cat /etc/rsyncd.secrets 
+[root@localhost ~]# cat /etc/rsyncd.secrets 
     
-    pasword
+pasword
 
 {% endraw %}
 {% endhighlight %}
@@ -61,11 +61,11 @@ Inotify+rsync组合，采用系统级别监控各种变化，当Inotify监控到
 {% highlight bash %}
 {% raw %}
 
-    [root@localhost ~]# chmod 600 /etc/rsyncd.secrets
+[root@localhost ~]# chmod 600 /etc/rsyncd.secrets
     
-    [root@localhost ~]# ll /etc/rsyncd.secrets
+[root@localhost ~]# ll /etc/rsyncd.secrets
     
-    -rw------- 1 root root 7 Jun9 21:24 /etc/rsyncd.secrets
+-rw------- 1 root root 7 Jun9 21:24 /etc/rsyncd.secrets
 
 {% endraw %}
 {% endhighlight %}
@@ -75,13 +75,13 @@ Inotify+rsync组合，采用系统级别监控各种变化，当Inotify监控到
 {% highlight bash %}
 {% raw %}
 
-    [root@localhost ~]# tar -zxvf inotify-tools-3.14.tar.gz 
+[root@localhost ~]# tar -zxvf inotify-tools-3.14.tar.gz 
     
-    [root@localhost ~]# cd inotify-tools-3.14
+[root@localhost ~]# cd inotify-tools-3.14
     
-    [root@localhost inotify-tools-3.14]# ./configure --prefix=/usr/local/inotify
+[root@localhost inotify-tools-3.14]# ./configure --prefix=/usr/local/inotify
     
-    [root@localhost inotify-tools-3.14]# make && make install
+[root@localhost inotify-tools-3.14]# make && make install
 
 {% endraw %}
 {% endhighlight %}
@@ -93,37 +93,37 @@ Inotify+rsync组合，采用系统级别监控各种变化，当Inotify监控到
 {% highlight bash %}
 {% raw %}
     
-    [root@localhost ~]# vim /opt/rsync.sh
+[root@localhost ~]# vim /opt/rsync.sh
     
-    #!/bin/bash
-    SRC=/data/
+#!/bin/bash
+SRC=/data/
     
-    DST=root@192.168.1.7::data
+DST=root@192.168.1.7::data
     
-    /usr/local/inotify/bin/inotifywait -mrq --timefmt '%d/%m/%y %H:%M' --format '%T %w %f' -e modify,delete,create,attrib $SRC | while read file DATE TIME DIR;
-    do
+/usr/local/inotify/bin/inotifywait -mrq --timefmt '%d/%m/%y %H:%M' --format '%T %w %f' -e modify,delete,create,attrib $SRC | while read file DATE TIME DIR;
+do
     
-    /usr/local/rsync/bin/rsync -vzrtopg --delete --password-file=/etc/rsyncd.secrets $SRC $DST> /dev/null
-    
-    done
-    
-    [root@localhost ~]# chmod u+x /opt/rsync.sh
-     
-    rsync.sh脚本加入开机启动项
-    
-    [root@localhost ~]# echo "/opt/rsync.sh" >> /etc/rc.local
-     
-    防火墙开启rsync端口：873
-    
-    [root@localhost ~]# vim /etc/sysconfig/iptables
-    
-    添加：
-    
-    -A INPUT -m state --state NEW -m tcp -p tcp --dport 873 -jACCEPT
-    
-    重启：
-    
-    [root@localhost ~]# /etc/init.d/iptables restart
+/usr/local/rsync/bin/rsync -vzrtopg --delete --password-file=/etc/rsyncd.secrets $SRC $DST> /dev/null
+
+done
+
+[root@localhost ~]# chmod u+x /opt/rsync.sh
+ 
+rsync.sh脚本加入开机启动项
+
+[root@localhost ~]# echo "/opt/rsync.sh" >> /etc/rc.local
+ 
+防火墙开启rsync端口：873
+
+[root@localhost ~]# vim /etc/sysconfig/iptables
+
+添加：
+
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 873 -jACCEPT
+
+重启：
+
+[root@localhost ~]# /etc/init.d/iptables restart
 
 {% endraw %}
 {% endhighlight %}
@@ -138,7 +138,7 @@ Inotify+rsync组合，采用系统级别监控各种变化，当Inotify监控到
 {% highlight bash %}
 {% raw %}
     
-    [root@backup ~]# mkdir /data/
+[root@backup ~]# mkdir /data/
 
 {% endraw %}
 {% endhighlight %}
@@ -148,7 +148,7 @@ Inotify+rsync组合，采用系统级别监控各种变化，当Inotify监控到
 {% highlight bash %}
 {% raw %}
 
-    [root@backup ~]# wget http://rsync.samba.org/ftp/rsync/rsync-3.1.1.tar.gz
+[root@backup ~]# wget http://rsync.samba.org/ftp/rsync/rsync-3.1.1.tar.gz
 
 {% endraw %}
 {% endhighlight %}
@@ -158,11 +158,11 @@ Inotify+rsync组合，采用系统级别监控各种变化，当Inotify监控到
 {% highlight bash %}
 {% raw %}
 
-    [root@localhost ~]# tar -zxvf rsync-3.1.1.tar.gz
+[root@localhost ~]# tar -zxvf rsync-3.1.1.tar.gz
     
-    [root@localhost ~]# ./configure --prefix=/usr/local/rsync
+[root@localhost ~]# ./configure --prefix=/usr/local/rsync
     
-    [root@localhost ~]# make && make install
+[root@localhost ~]# make && make install
 
 {% endraw %}
 {% endhighlight %}
@@ -172,11 +172,11 @@ Inotify+rsync组合，采用系统级别监控各种变化，当Inotify监控到
 {% highlight bash %}
 {% raw %}
     
-    [root@backup ~]# echo "root:password" > /etc/rsyncd.secrets
+[root@backup ~]# echo "root:password" > /etc/rsyncd.secrets
     
-    [root@backup ~]# cat /etc/rsyncd.secrets
+[root@backup ~]# cat /etc/rsyncd.secrets
     
-    root:password 
+root:password 
 
 {% endraw %}
 {% endhighlight %}
@@ -190,7 +190,7 @@ Inotify+rsync组合，采用系统级别监控各种变化，当Inotify监控到
 {% highlight bash %}
 {% raw %}
 
-    [root@backup ~]#chmod 600 /etc/rsyncd.secrets
+[root@backup ~]#chmod 600 /etc/rsyncd.secrets
 
 {% endraw %}
 {% endhighlight %}
@@ -200,49 +200,49 @@ Inotify+rsync组合，采用系统级别监控各种变化，当Inotify监控到
 {% highlight bash %}
 {% raw %}
 
-    [root@backup ~]# vim /etc/rsyncd.conf
-    
-    uid = root
-    
-    gid = root
-    
-    port = 873
-    
-    use chroot = yes
-    
-    read only = yes
-    
-    hosts allow=192.168.1.0/255.255.255.0
-    
-    hosts deny=*
-    
-    max connections = 5
-    
-    log file =/var/log/rsyncd.log
-    
-    pid file =/var/run/rsyncd.pid
-    
-    lock file =/var/run/rsyncd.lock
-    
-    log format = %t %a %m %f%b
-    
-    syslog facility = local3
-    
-    timeout = 300
-     
-    [data]
-    
-    path = /data/
-    
-    list = no
-    
-    read only = no
-    
-    ignore errors
-    
-    auth users = root
-    
-    secrets file =/etc/rsyncd.secrets
+[root@backup ~]# vim /etc/rsyncd.conf
+
+uid = root
+
+gid = root
+
+port = 873
+
+use chroot = yes
+
+read only = yes
+
+hosts allow=192.168.1.0/255.255.255.0
+
+hosts deny=*
+
+max connections = 5
+
+log file =/var/log/rsyncd.log
+
+pid file =/var/run/rsyncd.pid
+
+lock file =/var/run/rsyncd.lock
+
+log format = %t %a %m %f%b
+
+syslog facility = local3
+
+timeout = 300
+ 
+[data]
+
+path = /data/
+
+list = no
+
+read only = no
+
+ignore errors
+
+auth users = root
+
+secrets file =/etc/rsyncd.secrets
 
 {% endraw %}
 {% endhighlight %}    
@@ -253,9 +253,9 @@ Inotify+rsync组合，采用系统级别监控各种变化，当Inotify监控到
 {% highlight bash %}
 {% raw %}
 
-    [root@backup ~]# /usr/local/rsync/bin/rsync --daemon 	--config=/etc/rsyncd.conf
+[root@backup ~]# /usr/local/rsync/bin/rsync --daemon 	--config=/etc/rsyncd.conf
     
-    [root@backup ~]# ps -ef |grep rsync 
+[root@backup ~]# ps -ef |grep rsync 
 
 {% endraw %}
 {% endhighlight %}
@@ -265,7 +265,7 @@ Rsync服务加入开机启动项
 {% highlight bash %}
 {% raw %}
 
-    [root@backup ~]# echo "/usr/local/rsync/bin/rsync --daemon --config=/etc/rsyncd.conf" >> /etc/rc.local
+[root@backup ~]# echo "/usr/local/rsync/bin/rsync --daemon --config=/etc/rsyncd.conf" >> /etc/rc.local
 
 {% endraw %}
 {% endhighlight %}
@@ -275,7 +275,7 @@ Rsync服务加入开机启动项
 {% highlight bash %}
 {% raw %}
 
-    [root@backup ~]# vim /etc/sysconfig/iptables
+[root@backup ~]# vim /etc/sysconfig/iptables
 
 {% endraw %}
 {% endhighlight %}
@@ -285,7 +285,7 @@ Rsync服务加入开机启动项
 {% highlight bash %}
 {% raw %}
 
-    -A INPUT -m state --state NEW -m tcp -p tcp --dport 873 -jACCEPT
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 873 -jACCEPT
 
 {% endraw %}
 {% endhighlight %}
@@ -295,7 +295,7 @@ Rsync服务加入开机启动项
 {% highlight bash %}
 {% raw %}
 
-    [root@backup ~]# /etc/init.d/iptables restart
+[root@backup ~]# /etc/init.d/iptables restart
 
 {% endraw %}
 {% endhighlight %}
@@ -307,9 +307,9 @@ Rsync服务加入开机启动项
 {% highlight bash %}
 {% raw %}
 
-    [root@localhost ~]# reboot
+[root@localhost ~]# reboot
     
-    [root@backup ~]# reboot
+[root@backup ~]# reboot
 
 {% endraw %}
 {% endhighlight %}
@@ -322,7 +322,7 @@ Rsync服务加入开机启动项
 {% highlight bash %}
 {% raw %}
 
-    [root@localhost data]# mkdir zl
+[root@localhost data]# mkdir zl
 
 {% endraw %}
 {% endhighlight %}
@@ -332,7 +332,7 @@ Rsync服务加入开机启动项
 {% highlight bash %}
 {% raw %}
 
-    [root@backup ~]# ll /data/
+[root@backup ~]# ll /data/
 
 {% endraw %}
 {% endhighlight %}
@@ -344,11 +344,11 @@ Rsync服务加入开机启动项
 {% highlight bash %}
 {% raw %}
 
-    192.168.1.7---------->192.168.1.8 
+192.168.1.7---------->192.168.1.8 
     
-    [root@ localhost ~]# /usr/bin/rsync -vzrtopg --delete--password-file=/etc/
+[root@ localhost ~]# /usr/bin/rsync -vzrtopg --delete--password-file=/etc/
     
-    rsyncd.secrets /data/ root@192.168.1.8::data
+rsyncd.secrets /data/ root@192.168.1.8::data
 
 {% endraw %}
 {% endhighlight %}
@@ -358,11 +358,11 @@ Rsync服务加入开机启动项
 {% highlight bash %}
 {% raw %}
 
-    192.168.1.8 ---------->192.168.1.7
+192.168.1.8 ---------->192.168.1.7
     
-    [root@localhost ~]# /usr/bin/rsync -vzrtopg --delete--password-file=/etc/rsyncd.secrets 
+[root@localhost ~]# /usr/bin/rsync -vzrtopg --delete--password-file=/etc/rsyncd.secrets 
     
-    root@192.168.1.7::data /data/
+root@192.168.1.7::data /data/
 
 {% endraw %}
 {% endhighlight %} 

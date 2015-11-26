@@ -27,15 +27,15 @@ rsync（remote synchronize）是一个快速增量文件传输软件，它在同
 {% highlight bash %}
 {% raw %}
 
-    [root@localhost ~]# mkdir /data/ftpdata
-    
-    [root@localhost ~]# wget http://rsync.samba.org/ftp/rsync/rsync-3.1.1.tar.gz
+[root@localhost ~]# mkdir /data/ftpdata
 
-    [root@localhost ~]# tar -zxvf rsync-3.1.1.tar.gz
-    
-    [root@localhost ~]# ./configure --prefix=/usr/local/rsync
-    
-    [root@localhost ~]# make && make install
+[root@localhost ~]# wget http://rsync.samba.org/ftp/rsync/rsync-3.1.1.tar.gz
+
+[root@localhost ~]# tar -zxvf rsync-3.1.1.tar.gz
+
+[root@localhost ~]# ./configure --prefix=/usr/local/rsync
+
+[root@localhost ~]# make && make install
 
 {% endraw %}
 {% endhighlight %}
@@ -47,11 +47,11 @@ rsync（remote synchronize）是一个快速增量文件传输软件，它在同
 {% highlight bash %}
 {% raw %}
     
-    sudo apt-get install rsync  在debian、ubuntu等在线安装
-    
-    yum install rsync 在Redhat、Centos等在线安装
-    
-    rpm -ivh rsync  在Redhat、Centos等rpm包安装
+sudo apt-get install rsync  在debian、ubuntu等在线安装
+
+yum install rsync 在Redhat、Centos等在线安装
+
+rpm -ivh rsync  在Redhat、Centos等rpm包安装
 
 {% endraw %}
 {% endhighlight %}
@@ -67,7 +67,7 @@ rsync主要有三个配置文件，可怜的是，这三个文件都需要自己
 {% highlight bash %}
 {% raw %}
 
-	mkdir /usr/local/rsync/etc
+mkdir /usr/local/rsync/etc
 
 {% endraw %}
 {% endhighlight %}
@@ -77,7 +77,7 @@ rsync主要有三个配置文件，可怜的是，这三个文件都需要自己
 {% highlight bash %}
 {% raw %}
 
-	touch /usr/local/rsync/etc/rsyncd.conf
+touch /usr/local/rsync/etc/rsyncd.conf
 
 {% endraw %}
 {% endhighlight %}
@@ -87,55 +87,54 @@ rsync主要有三个配置文件，可怜的是，这三个文件都需要自己
 {% highlight bash %}
 {% raw %}
 
-    # Minimal configuration file for rsync daemon
-    # See rsync(1) and rsyncd.conf(5) man pages for help
-     
-    # This line is required by the /etc/init.d/rsyncd script
-    pid file = /var/run/rsyncd.pid   
-    port = 873
-    address = 192.168.1.7
+# Minimal configuration file for rsync daemon
+# See rsync(1) and rsyncd.conf(5) man pages for help
+ 
+# This line is required by the /etc/init.d/rsyncd script
+pid file = /var/run/rsyncd.pid   
+port = 873
+address = 192.168.1.7
    
-    uid = root   
-    gid = root   
-     
-    use chroot = yes 
-    read only = no 
-     
-     
-    #limit access to private LANs
-    hosts allow=192.168.1.0/255.255.255.0 10.0.1.0/255.255.255.0 
-    hosts deny=*
-     
-    max connections = 5
-    motd file = /etc/rsyncd/rsyncd.motd
-     
-    #This will give you a separate log file
-    #log file = /var/log/rsync.log
-     
-    #This will log every file transferred - up to 85,000+ per user, per sync
-    #transfer logging = yes
-     
-    log format = %t %a %m %f %b
-    syslog facility = local3
-    timeout = 300
-     
-    [data]   
-    path = /data   
-    list=yes
-    ignore errors
-    auth users = root
-    secrets file = /usr/local/rsync/etc/rsyncd.secrets 
-    comment = root data 
-    exclude =   test/  download/
-     
-    [beinan]
-    path = /opt
-    list=no
-    ignore errors
-    comment = optdir   
-    auth users = test2
-    secrets file = /usr/local/rsync/etc/rsyncd.secrets
-
+uid = root   
+gid = root   
+ 
+use chroot = yes 
+read only = no 
+ 
+ 
+#limit access to private LANs
+hosts allow=192.168.1.0/255.255.255.0 10.0.1.0/255.255.255.0 
+hosts deny=*
+ 
+max connections = 5
+motd file = /etc/rsyncd/rsyncd.motd
+ 
+#This will give you a separate log file
+#log file = /var/log/rsync.log
+ 
+#This will log every file transferred - up to 85,000+ per user, per sync
+#transfer logging = yes
+ 
+log format = %t %a %m %f %b
+syslog facility = local3
+timeout = 300
+ 
+[data]   
+path = /data   
+list=yes
+ignore errors
+auth users = root
+secrets file = /usr/local/rsync/etc/rsyncd.secrets 
+comment = root data 
+exclude =   test/  download/
+ 
+[beinan]
+path = /opt
+list=no
+ignore errors
+comment = optdir   
+auth users = test2
+secrets file = /usr/local/rsync/etc/rsyncd.secrets
 
 {% endraw %}
 {% endhighlight %}
@@ -168,8 +167,8 @@ rsync主要有三个配置文件，可怜的是，这三个文件都需要自己
 {% highlight bash %}
 {% raw %}
 
-	touch /usr/local/rsync/etc/rsyncd.secrets
-	chmod 600 /usr/local/rsync/etc/rsyncd.secrets
+touch /usr/local/rsync/etc/rsyncd.secrets
+chmod 600 /usr/local/rsync/etc/rsyncd.secrets
 
 {% endraw %}
 {% endhighlight %}
@@ -187,7 +186,7 @@ rsync主要有三个配置文件，可怜的是，这三个文件都需要自己
 {% highlight bash %}
 {% raw %}
 
-	touch /usr/local/rsync/etc/rsyncd.motd
+touch /usr/local/rsync/etc/rsyncd.motd
 
 {% endraw %}
 {% endhighlight %}
@@ -213,7 +212,7 @@ rsync主要有三个配置文件，可怜的是，这三个文件都需要自己
 {% highlight bash %}
 {% raw %}
 
-	/usr/local/rsync/bin/rsync --daemon --config=/usr/local/rsync/etc/rsyncd.conf
+/usr/local/rsync/bin/rsync --daemon --config=/usr/local/rsync/etc/rsyncd.conf
 
 {% endraw %}
 {% endhighlight %}
@@ -230,7 +229,7 @@ rsync主要有三个配置文件，可怜的是，这三个文件都需要自己
 {% highlight bash %}
 {% raw %}
 
-	iptables -A INPUT -p tcp -m state --state NEW  -m tcp --dport 873 -j ACCEPT
+iptables -A INPUT -p tcp -m state --state NEW  -m tcp --dport 873 -j ACCEPT
 
 {% endraw %}
 {% endhighlight %}
@@ -244,7 +243,7 @@ rsync主要有三个配置文件，可怜的是，这三个文件都需要自己
 {% highlight bash %}
 {% raw %}
 
-	/usr/local/rsync/bin/rsync -avzP root@192.168.1.7::data  data
+/usr/local/rsync/bin/rsync -avzP root@192.168.1.7::data  data
 
 {% endraw %}
 {% endhighlight %}

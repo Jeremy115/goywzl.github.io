@@ -94,30 +94,30 @@ mod=6，即：(balance-alb) Adaptive load balancing（适配器适应性负载�
 {% highlight bash %}
 {% raw %}
 
-	vim /etc/sysconfig/network-scripts/ifcfg-bond0
+vim /etc/sysconfig/network-scripts/ifcfg-bond0
 
-	文件中添加如下内容
-        DEVICE=bond0
-        BOOTPROTO=none
-        ONBOOT=yes
-        IPADDR=192.168.0.100
-        NETMASK=255.255.255.0
-        NETWORK=192.168.0.0
-        BROADCAST=192.168.0.255
+文件中添加如下内容
+	DEVICE=bond0
+	BOOTPROTO=none
+	ONBOOT=yes
+	IPADDR=192.168.0.100
+	NETMASK=255.255.255.0
+	NETWORK=192.168.0.0
+	BROADCAST=192.168.0.255
 
-	编辑eth0网卡
-	vim /etc/sysconfig/network-scripts/ifcfg-eth0
-        DEVICE=eth0
-        BOOTPROTO=none
-        MASTER=bond0
-        SLAVE=yes
+编辑eth0网卡
+vim /etc/sysconfig/network-scripts/ifcfg-eth0
+	DEVICE=eth0
+	BOOTPROTO=none
+	MASTER=bond0
+	SLAVE=yes
 
-	编辑etho1网卡
-	vim /etc/sysconfig/network-scripts/ifcfg-eth1
-        DEVICE=eth1
-        BOOTPROTO=none
-        MASTER=bond0
-        SLAVE=yes
+编辑etho1网卡
+vim /etc/sysconfig/network-scripts/ifcfg-eth1
+	DEVICE=eth1
+	BOOTPROTO=none
+	MASTER=bond0
+	SLAVE=yes
 
 {% endraw %}
 {% endhighlight %}
@@ -127,18 +127,18 @@ mod=6，即：(balance-alb) Adaptive load balancing（适配器适应性负载�
 {% highlight bash %}
 {% raw %}
 
-	vim /etc/modprobe.d/bonding.conf
+vim /etc/modprobe.d/bonding.conf
 
-	添加如下内容
-	    alias bond0 bonding
-        options bonding mode=0 miimon=200
+添加如下内容
+	alias bond0 bonding
+	options bonding mode=0 miimon=200
 
-	执行如下命令加载文件
-		modprobe bonding
+执行如下命令加载文件
+	modprobe bonding
 
-	确认文件加载结果
-		lsmod | grep bonding
-			bonding 100065 0
+确认文件加载结果
+	lsmod | grep bonding
+	bonding 100065 0
 
 {% endraw %}
 {% endhighlight %}
@@ -148,15 +148,15 @@ mod=6，即：(balance-alb) Adaptive load balancing（适配器适应性负载�
 {% highlight bash %}
 {% raw %}
 
-	同bond模式下的多bond口配置
-        alias bond0 bonding
-        alias bond1 bonding
-        options bonding max_bonds=2 miimon=200 mode=1
+同bond模式下的多bond口配置
+	alias bond0 bonding
+	alias bond1 bonding
+	options bonding max_bonds=2 miimon=200 mode=1
 
-	不同bond模式下多bond配置
-        alias bond0 bonding
-        options bond0 miimon=100 mode=1
-        install bond1 /sbin/modprobe bonding -o bond1 miimon=200 mode=0
+不同bond模式下多bond配置
+	alias bond0 bonding
+	options bond0 miimon=100 mode=1
+	install bond1 /sbin/modprobe bonding -o bond1 miimon=200 mode=0
 
 {% endraw %}
 {% endhighlight %}
@@ -166,9 +166,9 @@ mod=6，即：(balance-alb) Adaptive load balancing（适配器适应性负载�
 {% highlight bash %}
 {% raw %}
 
-	miimon 监视网络链接的频度，单位是毫秒，我们设置的是200毫秒。
-	max_bonds 配置的bond口个数
-	mode bond模式，主要有以下几种，在一般的实际应用中，0和1用的比较多，
+miimon 监视网络链接的频度，单位是毫秒，我们设置的是200毫秒。
+max_bonds 配置的bond口个数
+mode bond模式，主要有以下几种，在一般的实际应用中，0和1用的比较多，
 
 {% endraw %}
 {% endhighlight %}
@@ -178,7 +178,7 @@ mod=6，即：(balance-alb) Adaptive load balancing（适配器适应性负载�
 {% highlight bash %}
 {% raw %}
 
-	service network restart
+service network restart
 
 {% endraw %}
 {% endhighlight %}

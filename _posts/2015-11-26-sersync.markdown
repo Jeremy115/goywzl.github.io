@@ -29,10 +29,16 @@ categories: home server
 
 然后安装sersync
 
+{% highlight bash %}
+{% raw %}
+
 	wget https://sersync.googlecode.com/files/sersync2.5.4_64bit_binary_stable_final.tar.gz
 	makdir /usr/local/sersync
 	tar -zxvf sersync2.5.4_64bit_binary_stable_final.tar.gz
 	mv GNU-Linux-x86/* /usr/local/sersync
+
+{% endraw %}
+{% endhighlight %}
 
 到这里就是安装完成了，都是文件而已
 
@@ -40,10 +46,19 @@ categories: home server
 
 同样，先创建密码文件
 
+{% highlight bash %}
+{% raw %}
+
 	echo "111111" >/usr/local/sersync/rsync.secrets
 	chmod 600 /usr/local/sersync/rsync.secrets
 
+{% endraw %}
+{% endhighlight %}
+
 然后就是重头戏，conf配置文件
+
+{% highlight bash %}
+{% raw %}
 
     <filter start=”true”>
     	<exclude expression="(.*)\.svn"></exclude>
@@ -88,6 +103,8 @@ categories: home server
         </crontabfilter>
     </crontab>
 
+{% endraw %}
+{% endhighlight %}
 
 大概就是这样，修改一下就好，我就写了一部分，多余的大神都看得懂，小白就谷歌一下吧，我也是用到多少记多少
 

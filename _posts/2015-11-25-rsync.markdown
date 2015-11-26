@@ -24,6 +24,9 @@ rsync（remote synchronize）是一个快速增量文件传输软件，它在同
 
 ## 1、源码包安装 ##
 
+{% highlight bash %}
+{% raw %}
+
     [root@localhost ~]# mkdir /data/ftpdata
     
     [root@localhost ~]# wget http://rsync.samba.org/ftp/rsync/rsync-3.1.1.tar.gz
@@ -34,15 +37,24 @@ rsync（remote synchronize）是一个快速增量文件传输软件，它在同
     
     [root@localhost ~]# make && make install
 
+{% endraw %}
+{% endhighlight %}
+
 我比较喜欢源码包安装，我认为这样能跟好的管理
 
 ## 2.linux发行版收录内的下载安装 ##
+
+{% highlight bash %}
+{% raw %}
     
     sudo apt-get install rsync  在debian、ubuntu等在线安装
     
     yum install rsync 在Redhat、Centos等在线安装
     
     rpm -ivh rsync  在Redhat、Centos等rpm包安装
+
+{% endraw %}
+{% endhighlight %}
 
 这样的安装比较简单，安装过程中缺少什么工具，系统会自动安装。
 
@@ -52,14 +64,28 @@ rsync（remote synchronize）是一个快速增量文件传输软件，它在同
 
 rsync主要有三个配置文件，可怜的是，这三个文件都需要自己创建，是不是很逗，我刚开始也是很蒙，不过，这样更加的可以随性配置,我喜欢东西都放一块，所以就在rsync的安装目录，创建了一个目录放这三个文件
 
+{% highlight bash %}
+{% raw %}
+
 	mkdir /usr/local/rsync/etc
 
+{% endraw %}
+{% endhighlight %}
 
 ## 1.首先说我们的主配置文件rsyncd.conf ##
 
+{% highlight bash %}
+{% raw %}
+
 	touch /usr/local/rsync/etc/rsyncd.conf
 
+{% endraw %}
+{% endhighlight %}
+
 文件内容如下：
+
+{% highlight bash %}
+{% raw %}
 
     # Minimal configuration file for rsync daemon
     # See rsync(1) and rsyncd.conf(5) man pages for help
@@ -110,6 +136,10 @@ rsync主要有三个配置文件，可怜的是，这三个文件都需要自己
     auth users = test2
     secrets file = /usr/local/rsync/etc/rsyncd.secrets
 
+
+{% endraw %}
+{% endhighlight %}
+
 对配置文件做一下详解
 
 	pid file    指定pid进程写到次文件位置
@@ -135,8 +165,14 @@ rsync主要有三个配置文件，可怜的是，这三个文件都需要自己
 
 ## 2.然后说一下我们的密码文件rsyncd.secrets ##
 
+{% highlight bash %}
+{% raw %}
+
 	touch /usr/local/rsync/etc/rsyncd.secrets
 	chmod 600 /usr/local/rsync/etc/rsyncd.secrets
+
+{% endraw %}
+{% endhighlight %}
 	
 添加文件内容
 	
@@ -148,7 +184,13 @@ rsync主要有三个配置文件，可怜的是，这三个文件都需要自己
 
 ## 3.最后说一下可有可无的服务器信息文件rsyncd.motd ##
 
+{% highlight bash %}
+{% raw %}
+
 	touch /usr/local/rsync/etc/rsyncd.motd
+
+{% endraw %}
+{% endhighlight %}
 
 文件内容如下
     
@@ -168,7 +210,13 @@ rsync主要有三个配置文件，可怜的是，这三个文件都需要自己
 
 以上都配置完成之后，就可以启动了，启动命令如下：
 
+{% highlight bash %}
+{% raw %}
+
 	/usr/local/rsync/bin/rsync --daemon --config=/usr/local/rsync/etc/rsyncd.conf
+
+{% endraw %}
+{% endhighlight %}
 
 其中--daemon是让rsync以服务器的模式启动，--config是指定配置文件位置
 
@@ -179,7 +227,13 @@ rsync主要有三个配置文件，可怜的是，这三个文件都需要自己
 
 命令如下：
 
+{% highlight bash %}
+{% raw %}
+
 	iptables -A INPUT -p tcp -m state --state NEW  -m tcp --dport 873 -j ACCEPT
+
+{% endraw %}
+{% endhighlight %}
 
 ## 3.客户端同步数据 ##
 
@@ -187,7 +241,13 @@ rsync主要有三个配置文件，可怜的是，这三个文件都需要自己
 
 安装方法上面也已经介绍过，下面是同步命令
 
+{% highlight bash %}
+{% raw %}
+
 	/usr/local/rsync/bin/rsync -avzP root@192.168.1.7::data  data
+
+{% endraw %}
+{% endhighlight %}
 
 之后会让你输入密码，这里写上密码配置文件中记载的11111即可，不用输入root的登录密码
 

@@ -14,21 +14,37 @@ Inotify+rsync组合，采用系统级别监控各种变化，当Inotify监控到
 
 1、准备软件包
 
+{% highlight bash %}
+{% raw %}
+
     [root@localhost ~]# mkdir /data/ftpdata
     
     [root@localhost ~]# wget http://rsync.samba.org/ftp/rsync/rsync-3.1.1.tar.gz
     
     [root@localhost ~]# wget http://github.com/downloads/rvoicilas/inotify-tools/inotify-tools-3.14.tar.gz
 
+
+{% endraw %}
+{% endhighlight %}
+
 2、安装Rsync并配置
+
+{% highlight bash %}
+{% raw %}
 
     [root@localhost ~]# tar -zxvf rsync-3.1.1.tar.gz
     
     [root@localhost ~]# ./configure --prefix=/usr/local/rsync
     
     [root@localhost ~]# make && make install
+
+{% endraw %}
+{% endhighlight %}
  
 建立密码认证文件
+
+{% highlight bash %}
+{% raw %}
     
     [root@localhost ~]# echo "pasword">/etc/rsyncd.secrets
     
@@ -36,16 +52,28 @@ Inotify+rsync组合，采用系统级别监控各种变化，当Inotify监控到
     
     pasword
 
+{% endraw %}
+{% endhighlight %}
+
 其中password可以自己设置密码，rsyncd.secrets名字也可以自己设置；
 权限：要将/etc/rsyncd.secrets设置为root拥有, 且权限为600。
+
+{% highlight bash %}
+{% raw %}
 
     [root@localhost ~]# chmod 600 /etc/rsyncd.secrets
     
     [root@localhost ~]# ll /etc/rsyncd.secrets
     
     -rw------- 1 root root 7 Jun9 21:24 /etc/rsyncd.secrets
+
+{% endraw %}
+{% endhighlight %}
  
 3、安装inotify
+
+{% highlight bash %}
+{% raw %}
 
     [root@localhost ~]# tar -zxvf inotify-tools-3.14.tar.gz 
     
@@ -55,9 +83,15 @@ Inotify+rsync组合，采用系统级别监控各种变化，当Inotify监控到
     
     [root@localhost inotify-tools-3.14]# make && make install
 
+{% endraw %}
+{% endhighlight %}
+
 4、创建rsync同步脚本
 
 此项功能主要是将主服务器端的目录/data/里的内容，如果修改了（无论是添加、修改、删除文件）能够通过inotify监控到，并通过rsync实时的同步给backup的/data/里，下面是通过shell脚本实现的。
+
+{% highlight bash %}
+{% raw %}
     
     [root@localhost ~]# vim /opt/rsync.sh
     
@@ -91,28 +125,52 @@ Inotify+rsync组合，采用系统级别监控各种变化，当Inotify监控到
     
     [root@localhost ~]# /etc/init.d/iptables restart
 
+{% endraw %}
+{% endhighlight %}
+
 二、备份服务器(rsync)192.168.1.7
 
 
 1、准备工作
 
 创建备份目录：
+
+{% highlight bash %}
+{% raw %}
     
     [root@backup ~]# mkdir /data/
+
+{% endraw %}
+{% endhighlight %}
  
 2、准备软件包
 
+{% highlight bash %}
+{% raw %}
+
     [root@backup ~]# wget http://rsync.samba.org/ftp/rsync/rsync-3.1.1.tar.gz
+
+{% endraw %}
+{% endhighlight %}
  
 3、安装rsync（备份服务器只安装rsync）
+
+{% highlight bash %}
+{% raw %}
 
     [root@localhost ~]# tar -zxvf rsync-3.1.1.tar.gz
     
     [root@localhost ~]# ./configure --prefix=/usr/local/rsync
     
     [root@localhost ~]# make && make install
+
+{% endraw %}
+{% endhighlight %}
  
 4、建立用户与密码认证文件
+
+{% highlight bash %}
+{% raw %}
     
     [root@backup ~]# echo "root:password" > /etc/rsyncd.secrets
     
@@ -120,15 +178,27 @@ Inotify+rsync组合，采用系统级别监控各种变化，当Inotify监控到
     
     root:password 
 
+{% endraw %}
+{% endhighlight %}
+
 注意：
 
 请记住，在主服务器端建立的密码文件，只有密码，没有用户名；而在备份服务端backup里建立的密码文件，用户名与密码都有。
 
 权限：要将`/etc/rsyncd.secrets`设置为root拥有, 且权限为600。
 
+{% highlight bash %}
+{% raw %}
+
     [root@backup ~]#chmod 600 /etc/rsyncd.secrets
+
+{% endraw %}
+{% endhighlight %}
  
 5、建立rsync配置文件
+
+{% highlight bash %}
+{% raw %}
 
     [root@backup ~]# vim /etc/rsyncd.conf
     
@@ -173,66 +243,126 @@ Inotify+rsync组合，采用系统级别监控各种变化，当Inotify监控到
     auth users = root
     
     secrets file =/etc/rsyncd.secrets
-    
+
+{% endraw %}
+{% endhighlight %}    
  
 启动rsync服务
 
+
+{% highlight bash %}
+{% raw %}
 
     [root@backup ~]# /usr/local/rsync/bin/rsync --daemon 	--config=/etc/rsyncd.conf
     
     [root@backup ~]# ps -ef |grep rsync 
 
+{% endraw %}
+{% endhighlight %}
+
 Rsync服务加入开机启动项
 
+{% highlight bash %}
+{% raw %}
+
     [root@backup ~]# echo "/usr/local/rsync/bin/rsync --daemon --config=/etc/rsyncd.conf" >> /etc/rc.local
+
+{% endraw %}
+{% endhighlight %}
  
 防火墙开启rsync端口：873
 
+{% highlight bash %}
+{% raw %}
+
     [root@backup ~]# vim /etc/sysconfig/iptables
+
+{% endraw %}
+{% endhighlight %}
 
 添加：
 
+{% highlight bash %}
+{% raw %}
+
     -A INPUT -m state --state NEW -m tcp -p tcp --dport 873 -jACCEPT
+
+{% endraw %}
+{% endhighlight %}
  
 重启：
 
+{% highlight bash %}
+{% raw %}
+
     [root@backup ~]# /etc/init.d/iptables restart
+
+{% endraw %}
+{% endhighlight %}
  
 现在rsync与inotify在主服务器端安装完成，rsync在备份服务器backup端也安装完成！
  
 重启
 
+{% highlight bash %}
+{% raw %}
+
     [root@localhost ~]# reboot
     
     [root@backup ~]# reboot
+
+{% endraw %}
+{% endhighlight %}
  
 三、测试验证
 
 1、在主服务器端/data/ 目录上创建一个文件夹：
 
 
+{% highlight bash %}
+{% raw %}
+
     [root@localhost data]# mkdir zl
+
+{% endraw %}
+{% endhighlight %}
  
 2、在backup端查看/data/目录是否相同；
 
+{% highlight bash %}
+{% raw %}
+
     [root@backup ~]# ll /data/
 
+{% endraw %}
+{% endhighlight %}
 
 四、备份与恢复
 
 1、手动备份
+
+{% highlight bash %}
+{% raw %}
 
     192.168.1.7---------->192.168.1.8 
     
     [root@ localhost ~]# /usr/bin/rsync -vzrtopg --delete--password-file=/etc/
     
     rsyncd.secrets /data/ root@192.168.1.8::data
+
+{% endraw %}
+{% endhighlight %}
  
 2、手动恢复
+
+{% highlight bash %}
+{% raw %}
 
     192.168.1.8 ---------->192.168.1.7
     
     [root@localhost ~]# /usr/bin/rsync -vzrtopg --delete--password-file=/etc/rsyncd.secrets 
     
     root@192.168.1.7::data /data/
- 
+
+{% endraw %}
+{% endhighlight %} 

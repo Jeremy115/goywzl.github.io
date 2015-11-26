@@ -14,19 +14,37 @@ categories: home linux
 
 一般用于大物理内存的服务器，执行如下命令，即关闭`SWAP`分区
 
+{% highlight bash %}
+{% raw %}
+
     swapoff -a
+
+{% endraw %}
+{% endhighlight %}
 
 2.开启`SWAP`
 
 说了关闭，肯定要说如何开启的，`SWAP`对于某些程序还是有用的，我似乎记得`oracle`安装的时候，似乎报过没有`SWAP`分区的错误，记不清了。你可以适当的分配少一点
 
+{% highlight bash %}
+{% raw %}
+
     swapon -a
+
+{% endraw %}
+{% endhighlight %}
 
 3.刷新`SWAP`
 
 当`SWAP`占用率高达30%，对系统性能可能会有一定影响，所以在适当情况下，我们可以执行上述的两个命令刷新一次`SWAP`（将`SWAP`里的数据转储回内存，并清空`SWAP`里的数据）刷新的原理，就是把swap关闭，然后再开启达到重启效果，执行如下命令，即可
 
+{% highlight bash %}
+{% raw %}
+
     swapoff -a && swapon -a
+
+{% endraw %}
+{% endhighlight %}
 
 注意：这样清理有个前提条件，空闲的内存必须比已经使用的swap空间大
 
@@ -51,25 +69,45 @@ cache: 作为page cache的内存, 文件系统的cache，是memory的缓冲区
 
 cache清理：
 
+{% highlight bash %}
+{% raw %}
+
     sync; sync; sync;&& echo3 >/proc/sys/vm/drop_caches
-    
     sleep 2
-    
-    echo 0>/proc/sys/vm/drop_caches
+	echo 0>/proc/sys/vm/drop_caches
+
+{% endraw %}
+{% endhighlight %}
 
 
 To free pagecache：
 
+{% highlight bash %}
+{% raw %}
+
     echo 1>/proc/sys/vm/drop_caches
 
+{% endraw %}
+{% endhighlight %}
 
 To free dentries and inodes：
 
+{% highlight bash %}
+{% raw %}
+
     echo 2>/proc/sys/vm/drop_caches
 
+{% endraw %}
+{% endhighlight %}
 
 To free pagecache,dentries and inodes：
 
+{% highlight bash %}
+{% raw %}
+
     echo 3>/proc/sys/vm/drop_caches
+
+{% endraw %}
+{% endhighlight %}
 
 `/proc/sys/vm/drop_caches` 的值默认为0（所以我们清空后，还再恢复它的值为0）

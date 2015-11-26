@@ -151,7 +151,7 @@ categories: home linux
 {% highlight bash %}
 {% raw %}
 
-    `yum install -y xinetd rdate`
+	yum install -y xinetd rdate
 
 {% endraw %}
 {% endhighlight %}
@@ -161,7 +161,7 @@ categories: home linux
 {% highlight bash %}
 {% raw %}
 
-    `disable = yes  改为  disable = no`
+	disable = yes  改为  disable = no
 
 {% endraw %}
 {% endhighlight %}
@@ -171,7 +171,7 @@ categories: home linux
 {% highlight bash %}
 {% raw %}
 
-    `service xinetd start`
+	service xinetd start
 
 {% endraw %}
 {% endhighlight %}
@@ -181,7 +181,7 @@ categories: home linux
 {% highlight bash %}
 {% raw %}
 
-    `rdate -s ip`
+	rdate -s ip
 
 {% endraw %}
 {% endhighlight %}

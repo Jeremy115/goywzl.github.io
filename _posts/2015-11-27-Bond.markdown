@@ -91,6 +91,9 @@ mod=6，即：(balance-alb) Adaptive load balancing（适配器适应性负载�
 
 1.添加bond0文件
 
+{% highlight bash %}
+{% raw %}
+
 	vim /etc/sysconfig/network-scripts/ifcfg-bond0
 
 	文件中添加如下内容
@@ -116,7 +119,13 @@ mod=6，即：(balance-alb) Adaptive load balancing（适配器适应性负载�
         MASTER=bond0
         SLAVE=yes
 
+{% endraw %}
+{% endhighlight %}
+
 2.修改modprobe相关设定文件，并加载bonding模块
+
+{% highlight bash %}
+{% raw %}
 
 	vim /etc/modprobe.d/bonding.conf
 
@@ -131,7 +140,13 @@ mod=6，即：(balance-alb) Adaptive load balancing（适配器适应性负载�
 		lsmod | grep bonding
 			bonding 100065 0
 
+{% endraw %}
+{% endhighlight %}
+
 上面是配置一块bond的结果，如果你有四个网卡，想要设置两个bond，可以配制成如下内容
+
+{% highlight bash %}
+{% raw %}
 
 	同bond模式下的多bond口配置
         alias bond0 bonding
@@ -143,16 +158,30 @@ mod=6，即：(balance-alb) Adaptive load balancing（适配器适应性负载�
         options bond0 miimon=100 mode=1
         install bond1 /sbin/modprobe bonding -o bond1 miimon=200 mode=0
 
+{% endraw %}
+{% endhighlight %}
+
 上面的配置，做一下简单解释
+
+{% highlight bash %}
+{% raw %}
 
 	miimon 监视网络链接的频度，单位是毫秒，我们设置的是200毫秒。
 	max_bonds 配置的bond口个数
 	mode bond模式，主要有以下几种，在一般的实际应用中，0和1用的比较多，
 
+{% endraw %}
+{% endhighlight %}
+
 3.重启网卡，检查结果
+
+{% highlight bash %}
+{% raw %}
 
 	service network restart
 
+{% endraw %}
+{% endhighlight %}
 
 ----------
 

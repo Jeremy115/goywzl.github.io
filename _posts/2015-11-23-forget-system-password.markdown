@@ -47,13 +47,15 @@ categories: home other
 
 方法2：纯属的破解，重启电脑，启动时候按`command(apple图标键)+S`键，这个跟`linux`类似，也是进入单一用户模式`(single user model)`。进入系统后会出现提示符：`#root>`,之后执行下面的命令即可。
 
+
     /sbin/fsck -y   执行硬盘检测（只读），挺浪费时间，不执行也行
-    
+
     /sbin/mount -uaw 加载文件系统（读/写）
-    
+
     rm /var/db/.AppleSetupDone  删除初始化设置时的OSX生成的隐藏文件`.applesetupdone`
-    
+
     reboot重启
+
     
 重新启动后出现类似装机时的欢迎界面。根据提示重新建立一个新的管理员账号`(注意这里要换一个新的账户名称)`。然后用新的管理员账号登录进去，修改之前账户的密码，注销，切换账户即可。
 

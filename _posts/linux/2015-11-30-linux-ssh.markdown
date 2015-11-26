@@ -1,0 +1,236 @@
+---
+layout: article
+title:  "linux-ssh"
+date:   2015-11-30 09:20:00 +0800
+categories: home linux
+---
+
+ssh远程服务，用来登录远程linux主机，这里我就直接介绍命令了。
+
+# 首先还是安装ssh #
+
+你在命令行下输入ssh，出现如下信息
+
+	-bash: ssh: command not found	
+
+恭喜你，你的系统并没有ssh这个服务，你需要安装
+
+{% highlight bash %}
+{% raw %}
+
+yum install -y openssh
+
+{% endraw %}
+{% endhighlight %}
+
+
+好了，你安装完了
+
+
+----------
+
+# 下面介绍ssh的命令 #
+
+查看ssh客户端的版本号：
+
+{% highlight bash %}
+{% raw %}
+
+[root@localhost ~]# ssh -V 
+
+OpenSSH_5.3p1, OpenSSL 1.0.1e-fips 11 Feb 2013
+
+{% endraw %}
+{% endhighlight %}
+
+当你第一次使用ssh登录远程主机时，会出现没有找到主机密钥的提示信息。输入"yes"后，系统会将远程主机的密钥加入到你的主目录下的 .ssh/hostkeys下,之后就不需要了。
+
+ssh的常用格式： `ssh [-l login_name] [-p port] [user@]hostname`
+
+不指定用户
+
+{% highlight bash %}
+{% raw %}
+
+ssh 192.168.0.1
+
+{% endraw %}
+{% endhighlight %}
+
+指定用户
+
+{% highlight bash %}
+{% raw %}
+
+ssh root@192.168.0.1
+
+{% endraw %}
+{% endhighlight %}
+
+非22端口
+
+{% highlight bash %}
+{% raw %}
+
+ssh -p 8888 192.168.0.1
+
+{% endraw %}
+{% endhighlight %}
+
+还有一个传输命令`scp`
+
+命令的基本格式：`scp [OPTIONS] file_source file_target `
+
+OPTIONS： 
+
+    -v 和大多数 linux 命令中的 -v 意思一样 , 用来显示进度 . 可以用来查看连接、认证、 或是配置错误 
+    -C 使能压缩选项 
+    -P 选择端口 . 注意 -p 已经被 rcp 使用 
+
+有两种方法
+
+1.从 本地 复制 到 远程 
+
+{% highlight bash %}
+{% raw %}
+
+scp /home/daisy/full.tar.gz root@172.19.2.75:/home/root 
+
+{% endraw %}
+{% endhighlight %}
+
+（然后会提示你输入另外那台172.19.2.75主机的root用户的登录密码，接着就开始copy了），复制目录加参数 -r 即可 
+
+2.从 远程 复制 到 本地 
+
+{% highlight bash %}
+{% raw %}
+
+scp root@/172.19.2.75:/home/root/full.tar.gz /home/daisy/full.tar.gz
+
+{% endraw %}
+{% endhighlight %}
+
+
+----------
+
+
+# SSH无密码登录 #
+
+就是通过公钥、私钥，实现不需要密码登录到远程主机
+
+示例：
+
+主机A：192.168.1.1
+
+主机B：192.168.1.2
+
+需要配置主机A无密码登录主机A，主机B
+
+先确保所有主机的防火墙处于关闭状态。
+
+在主机A上执行如下：
+
+{% highlight bash %}
+{% raw %}
+
+$cd ~/.ssh
+
+$ssh-keygen -t rsa  --------------------然后一直按回车键，
+
+就会按照默认的选项将生成的密钥保存在.ssh/id_rsa文件中。
+
+$cp id_rsa.pub authorized_keys 
+
+这步完成后，正常情况下就可以无密码登录本机了，即ssh localhost，无需输入密码。
+
+$scp authorized_keys test@192.168.1.2:/home/summer/.ssh   
+
+------把刚刚产生的authorized_keys文件拷一份到主机B上. 
+
+$chmod 600 authorized_keys
+
+上面的两步可以合成下面的一步
+
+$ssh-copy-id -i test@192.168.1.2
+
+{% endraw %}
+{% endhighlight %}
+
+进入主机B的.ssh目录，改变authorized_keys文件的许可权限。
+
+正常情况下上面几步执行完成后，从主机A所在机器向主机A、主机B所在机器发起ssh连接，只有在第一次登录时需要输入密码，以后则不需要。
+
+这里说一下我遇到过的问题：
+
+1.进行ssh登录时，出现：”Agent admitted failure to sign using the key“ .
+
+执行： `$ssh-add` 强行将私钥 加进来。
+
+2.如果无任何错误提示，可以输密码登录，但就是不能无密码登录，在被连接的主机上（如A向B发起ssh连接，则在B上）执行以下几步：
+
+{% highlight bash %}
+{% raw %}
+
+$chmod o-w ~/
+$chmod 700 ~/.ssh
+$chmod 600 ~/.ssh/authorized_keys
+
+{% endraw %}
+{% endhighlight %}
+
+3.如果执行了第2步，还是不能无密码登录，再试试下面几个
+
+{% highlight bash %}
+{% raw %}
+
+$ps -Af | grep agent
+
+{% endraw %}
+{% endhighlight %}
+
+检查ssh代理是否开启，如果有开启的话，kill掉该代理，然后执行下面，重新打开一个ssh代理，如果没有开启，直接执行下面：
+
+{% highlight bash %}
+{% raw %}
+
+$ssh-agent
+
+{% endraw %}
+{% endhighlight %}
+
+还是不行的话，执行下面，重启一下ssh服务
+
+{% highlight bash %}
+{% raw %}
+
+$sudo service sshd restart
+
+{% endraw %}
+{% endhighlight %}
+
+4.执行ssh-add时提示“Could not open a connection to your authenticationh agent”而失败
+
+{% highlight bash %}
+{% raw %}
+
+执行： ssh-agent bash
+
+{% endraw %}
+{% endhighlight %}
+
+
+关于ssh的我用到的，就先说到这。如有补充，请留言，谢谢
+
+
+
+
+
+
+
+
+
+
+
+
+

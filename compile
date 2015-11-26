@@ -1,0 +1,24 @@
+{% highlight bash %}
+{% raw %}
+bash代码高亮
+{% endraw %}
+{% endhighlight %}
+
+
+{% highlight vim %}
+{% raw %}
+vim代码高亮
+{% endraw %}
+{% endhighlight %}
+
+{% highlight mysql %}
+{% raw %}
+mysql代码高亮
+{% endraw %}
+{% endhighlight %}
+
+{% highlight python %}
+{% raw %}
+python代码高亮
+{% endraw %}
+{% endhighlight %}

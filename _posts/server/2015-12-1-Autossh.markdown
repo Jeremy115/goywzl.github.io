@@ -1,0 +1,180 @@
+---
+layout: article
+title:  "Autossh"
+date:   2015-12-01 09:20:00 +0800
+categories: home server
+---
+
+SSH反向连接及Autossh
+
+家里有一台电脑，用的还是ADSL拨号上网，自己搭建了一个linux服务器，我想要通过公司的服务器直接SSH到我家里的服务器怎么办。
+
+我这里想到了两种方法：
+
+第一种：就是端口映射了（很显然，ADSL拨号连接是不可能了，你的外网IP随时会变）
+
+第二种：就是内网主机主动链接到外网主机（反向链接），这样NAT路由/防火墙就会在内网主机和外网主机之间建立映射，自然可以相互通信了，但是，这种映射是NAT路由自动维持的，不会持续下去，如果连接断开或者网络不稳定都会导致通信失败，这时内网主机需要再次主动连接到外网主机，建立连接。
+
+----------
+
+
+# 实现ssh反向链接 #
+
+比如A要控制B
+
+A主机：外网，ip：111.222.111.222，ssh端口号：**2233**
+
+B主机：内网，ssh端口：**2234**
+
+记清楚这些端口号，下面可能会有点绕。
+
+**首先在B上执行**
+
+{% highlight bash %}
+{% raw %}
+
+$ ssh -NfR 1234:localhost:2234 user1@111.222.111.222 -p2233
+
+{% endraw %}
+{% endhighlight %}
+
+
+这句话的意思是将A主机的1234端口和B主机的2234端口绑定，相当于远程端口映射（Remote Port Forwarding）。
+
+后面的是远程服务器的用户名、ip、以及远程服务器ssh端口
+
+这里每次需要输入A主机user1的登陆密码，后面会讲到解决办法。
+
+这时在A主机上sshd会listen本地1234端口
+
+**之后在A主机执行下面命令**
+
+查看A主机是否有1234端口活跃
+
+{% highlight bash %}
+{% raw %}
+
+$ ss -ant
+
+State       Recv-Q Send-Q                                                   Local Address:Port
+
+LISTEN      0      128                                                          127.0.0.1:1234
+
+{% endraw %}
+{% endhighlight %}
+
+然后链接自己的1234端口，就可以直接ssh到B主机上了，如下：
+
+{% highlight bash %}
+{% raw %}
+
+$ ssh localhost -p1234
+
+{% endraw %}
+{% endhighlight %}
+
+输入B主机的密码之后，就远程到B主机上了。
+
+
+----------
+
+
+由于，这种反向连接（Reverse Connection）不稳定，可能随时断开，需要内网主机B再次向外网A发起连接，这时需要个“Autossh”帮你在内网B主机执行这条命令。。
+
+
+刚刚在B上执行的时候，需要输入A的密码，这时候我们就需要建立公钥私钥，实现自动连接了，实现B无密码登录到A即可
+
+无密码登录的方法见下面链接：[http://www.goywzl.com/home/linux/linux-ssh/](http://www.goywzl.com/home/linux/linux-ssh/)
+
+
+----------
+
+
+# 现在来说Autossh #
+
+首先是安装：
+
+先说简单的`Ubuntu`安装
+
+{% highlight bash %}
+{% raw %}
+
+$ apt-get install autossh
+
+{% endraw %}
+{% endhighlight %}
+
+然后说以下我最爱的`centos`安装，有点伤心，好麻烦
+
+{% highlight bash %}
+{% raw %}
+
+rpm -Uhv http://apt.sw.be/redhat/el5/en/i386/rpmforge/RPMS/rpmforge-release-0.3.6-1.el5.rf.i386.rpm
+
+sed -i "s/enabled = 1/enabled = 0/" /etc/yum.repos.d/rpmforge.repo
+
+yum install --enablerepo=rpmforge autossh
+
+{% endraw %}
+{% endhighlight %}
+
+因为yum里面没有，所以要添加才能yum安装。
+
+还有就是源码包安装,要先安装`gcc`、`make`
+
+{% highlight bash %}
+{% raw %}
+
+wget http://www.harding.motd.ca/autossh/autossh-1.4e.tgz
+
+tar -xf autossh-1.4e.tgz
+
+cd autossh-1.4e
+
+./configure
+
+make
+
+sudo make install 
+
+{% endraw %}
+{% endhighlight %}
+
+就说了这三种我会用到的安装方法。
+
+下面是autossh的执行命令
+
+Autossh 语法
+
+{% highlight bash %}
+{% raw %}
+
+autossh [-V] [-M port[:echo_port]] [-f] [SSH_OPTIONS]
+
+{% endraw %}
+{% endhighlight %}
+
+Autossh命令参数
+
+    -M xxxx : 负责通过xxxx端口监视连接状态，连接有问题时就会自动重连
+	-V  : 查看版本号
+    -f  : 后台运行
+
+
+我这里使用的命令是
+
+{% highlight bash %}
+{% raw %}
+
+$ autossh -M 5678 -NR 1234:localhost:2234 user1@111.222.111.222 -p2233
+
+{% endraw %}
+{% endhighlight %}
+
+可以对照上面第一条ssh映射端口的命令对比
+
+添加的一个-M 5678参数，负责通过5678端口监视连接状态，连接有问题时就会自动重连，去掉了一个-f参数，因为autossh本身就会在background运行。
+
+我把这条命令添加到`/etc/rc.local`文件中了，实现开机自动执行
+
+**注**：这个不仅可以映射`ssh`端口，还可以映射很多服务的端口。

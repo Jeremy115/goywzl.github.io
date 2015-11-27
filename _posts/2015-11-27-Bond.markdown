@@ -134,7 +134,7 @@ mod=6，即：(balance-alb) Adaptive load balancing（适配器适应性负载�
 上面是配置一块bond的结果，如果你有四个网卡，想要设置两个bond，可以配制成如下内容
 
 	同bond模式下的多bond口配置
-	alias bond0 bonding
+        alias bond0 bonding
         alias bond1 bonding
         options bonding max_bonds=2 miimon=200 mode=1
 

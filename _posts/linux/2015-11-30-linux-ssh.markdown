@@ -18,7 +18,7 @@ ssh远程服务，用来登录远程linux主机，这里我就直接介绍命令
 {% highlight bash %}
 {% raw %}
 
-yum install -y openssh
+yum install -y openssh*
 
 {% endraw %}
 {% endhighlight %}

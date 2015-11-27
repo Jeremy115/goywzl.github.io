@@ -51,7 +51,6 @@ Linux 安装好后，其默认的主机名是 localhost（当然，如果你安�
 {% raw %}
 
  NETWORKING=yes
-
  HOSTNAME=new-hostname.localdomain
 
 {% endraw %}
@@ -69,7 +68,6 @@ Linux 安装好后，其默认的主机名是 localhost（当然，如果你安�
 {% raw %}
 
  127.0.0.1  localhost.localdomain localhost
-
  127.0.0.1  new-hostname.localdomain new-hostname
 
 {% endraw %}

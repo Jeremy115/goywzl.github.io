@@ -48,26 +48,50 @@ categories: home linux
 
 查看当前时间
 
+{% highlight bash %}
+{% raw %}
+
     date "+%Y-%m-%d %H:%M:%S" 
     2015-11-20 13:41:05
 
+{% endraw %}
+{% endhighlight %}
+
 如果想要经过运算得出时间，则可以使用*-d*选项，后面的随你自己的需求变化，如月、日
+
+{% highlight bash %}
+{% raw %}
 
     date "+%Y-%m-%d %H:%M:%S" -d "-2 year"
     2013-11-20 13:45:30
 
+{% endraw %}
+{% endhighlight %}
+
 有时候需要获取当前时间距离1970年0时0分0秒所经历的秒数，保存在变量中，这个在写脚本的时候用到过
+
+{% highlight bash %}
+{% raw %}
 
     time=`date "+%s"`
     1447998474
+    
+{% endraw %}
+{% endhighlight %}
 
 当然了，你可以查看系统时间，也可以通过这条命令设置系统时间
 
 使用*-s*选项设置,有很多种格式，我比较喜欢第一种，习惯了，简单写三种，如下
 
+{% highlight bash %}
+{% raw %}
+
     date -s "2015-11-18 11:12:00"
     date -s "20151118 11:12:00"
     date -s "2015/11/18 11:12:00"
+
+{% endraw %}
+{% endhighlight %}
 
 其他的还有没说到的，就看你的英文读写能力，使用`date --help `命令或者`man date`了
 
@@ -89,13 +113,25 @@ categories: home linux
 
 命令：
 
+{% highlight bash %}
+{% raw %}
+
     rdate -s ntp.sjtu.edu.cn
+
+{% endraw %}
+{% endhighlight %}
 
 也可以使用`ntpdate`命令更新时间：
 
 命令：
 
+{% highlight bash %}
+{% raw %}
+
     ntpdate ntp.sjtu.edu.cn
+
+{% endraw %}
+{% endhighlight %}
 
 关于后面的`ntpdate ntp.sjtu.edu.cn`地址，网上搜索，有好多时间同步地址，我这里选择的是上海交大的ntp服务器地址
 
@@ -112,20 +148,40 @@ categories: home linux
 
 1. 先安装xinetd
 
+{% highlight bash %}
+{% raw %}
+
     `yum install -y xinetd rdate`
 
+{% endraw %}
+{% endhighlight %}
 
 2. 修改/etc/xinetd.d/time-stream, 修改：
 
+{% highlight bash %}
+{% raw %}
+
     `disable = yes  改为  disable = no`
 
+{% endraw %}
+{% endhighlight %}
 
 3. 启动xinetd
 
+{% highlight bash %}
+{% raw %}
+
     `service xinetd start`
 
+{% endraw %}
+{% endhighlight %}
 
 4. 这样其它机器就可以通过rdate 与该机器进行时间同步
 
+{% highlight bash %}
+{% raw %}
+
     `rdate -s ip`
 
+{% endraw %}
+{% endhighlight %}

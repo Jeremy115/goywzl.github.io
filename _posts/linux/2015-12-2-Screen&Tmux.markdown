@@ -116,7 +116,7 @@ screen -S test
 {% endraw %}
 {% endhighlight %}
 
-creen启动后，会创建第一个窗口，也就是窗口No. 0，并在其中打开一个系统默认的shell，一般都会是bash。
+screen启动后，会创建第一个窗口，也就是窗口No. 0，并在其中打开一个系统默认的shell，一般都会是bash。
 
 {% highlight bash %}
 {% raw %}

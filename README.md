@@ -1,18 +1,33 @@
-# Skinny Bones Jekyll Starter
+# goywzl
 
-Just a little something I'm using to jump start a site refresh. I like to think of it as a starter for building your own Jekyll site. I purposely keep the styling minimal and bare to make it easier to add your own flare and markup.
+这是我的个人博客，主要记录我做运维所遇到的问题，以及接触过的技术。
 
-**Jekyll 3 Update:** A version of Skinny Bones compatible with Jekyll 3 can be found in the [`jekyll3` branch](https://github.com/mmistakes/skinny-bones-jekyll/tree/jekyll3). GitHub Pages is [locked at version 2.4](https://pages.github.com/versions/) so some keep that in mind if you're trying to use 3.0 features that aren't supported there yet.
+记录下这些，为了方便我以后的回顾、温习，方便我的查找。
 
-I'm currently using a variation of it on my personal website [Made Mistakes](http://mademistakes.com) with some modifications. To learn more about how to use the theme and install it check out the [Skinny Bones demo](http://mmistakes.github.io/skinny-bones-jekyll/) (*work in progress*).
+# 简介
 
-![screenshot of Skinny Bones](http://mmistakes.github.io/skinny-bones-jekyll/images/skinny-bones-theme-feature.jpg)
+我是一名九零后运维工程师，主要从事linux运维工作。
 
----
+我是从一名电脑小白，自己学习，自己钻研，请教老师走到这一步的。
 
-## Notable Features
 
-* Stylesheet built using Sass. *Requires Jekyll 2.x*
-* Data files for easier customization of the site navigation/footer and for supporting multiple authors.
-* Optional Disqus comments, table of contents, social sharing links, and Google AdSense ads.
-* And more.
+# 经历
+
+我之前只是一个无所事事的混混，老爹让我学习电脑知识，给我选择了一个培训学校。
+
+曾学习过网络，想要做一名网络工程师，然而没有得到想要的结果。
+
+同学们有好多去做linux的，我并没有找到自己的方向，也选择改行做linux，发现很奇妙。
+
+所以决定专心的学习这些技术，好好发展自己，努力了很久，到了今天，感觉离目标还相差甚远。
+
+
+# 总结
+
+我小时候就比较笨，学得东西总是会忘掉，所以，在学这个电脑的时候，有一种习惯，学过的技术都会自己记录下来。
+
+发现好多博客，就心生了创建自己的博客的念头。
+
+于是，把自己所会的写到这里。
+
+如果你有更好的建议，或者很好的技术愿意告诉我，请给我留言，谢谢。

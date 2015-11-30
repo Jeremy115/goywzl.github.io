@@ -11,11 +11,8 @@
 - title: server
   url: /server/
 
-- title: shell
-  url: /shell/
-
-- title: python
-  url: /python/
+- title: script
+  url: /script/
 
 - title: other
   url: /other/

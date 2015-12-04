@@ -2,7 +2,7 @@
 layout: article
 title:  "linux-raid"
 date:   2015-11-29 09:20:00 +0800
-categories: home linux
+categories: linux
 ---
 
 RAID我想大家都不陌生，我公司买过几块硬盘，要做一下raid，我装在了服务器上，一般服务器上如果带raid卡的话，就直接做了，这是硬raid，我也有文档，这里主要介绍的是linux系统下做的软raid。

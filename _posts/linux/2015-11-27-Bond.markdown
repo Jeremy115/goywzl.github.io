@@ -2,7 +2,7 @@
 layout: article
 title:  "Bond"
 date:   2015-11-27 09:20:00 +0800
-categories: home linux
+categories: linux
 ---
 
 # Bond简介 #

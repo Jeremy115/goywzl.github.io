@@ -2,7 +2,7 @@
 layout: article
 title:  "linux-system-info"
 date:   2015-11-28 09:20:00 +0800
-categories: home linux
+categories: linux
 ---
 
 

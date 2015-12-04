@@ -2,7 +2,7 @@
 layout: article
 title:  "Screen and Tmux"
 date:   2015-12-02 09:20:00 +0800
-categories: home linux
+categories: linux
 ---
 
 

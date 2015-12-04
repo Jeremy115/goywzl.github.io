@@ -2,7 +2,7 @@
 layout: article
 title:  "linux-ssh"
 date:   2015-11-30 09:20:00 +0800
-categories: home linux
+categories: linux
 ---
 
 ssh远程服务，用来登录远程linux主机，这里我就直接介绍命令了。

@@ -2,7 +2,7 @@
 layout: article
 title:  "文件实时同步inotify+rsync"
 date:   2015-11-24 09:20:00 +0800
-categories: home server
+categories: server
 ---
 
 搭建了一个公司内部的共享服务器，让公司员工存放自己的文件，其实这个做一个每日备份即可，或者每周，不过上次领导放的文件，莫名其妙的没有了，让我这一顿好找，为了避免这样的事情发生，我只能做一个实时备份了， 研究了一下inotify+rsync。

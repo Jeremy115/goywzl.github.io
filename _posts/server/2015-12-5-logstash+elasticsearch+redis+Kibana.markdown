@@ -2,7 +2,7 @@
 layout: article
 title:  "Logstash Elasticsearch Redis Kibana"
 date:   2015-12-05 09:20:00 +0800
-categories: home server
+categories: server
 ---
 
 

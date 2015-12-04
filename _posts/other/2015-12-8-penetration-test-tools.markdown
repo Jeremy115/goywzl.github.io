@@ -2,7 +2,7 @@
 layout: article
 title:  "各种渗透测试工具"
 date:   2015-12-08 09:20:00 +0800
-categories: home other
+categories: other
 ---
 
 一天领导问我，你用渗透测试工具测试一下这个，我蒙了，什么是渗透测试工具啊，啧啧啧，这是要死人的节奏啊，赶紧网上查了一下。

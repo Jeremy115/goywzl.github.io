@@ -2,7 +2,7 @@
 layout: article
 title:  "通过外网linux主机登录到内网windows主机"
 date:   2015-12-07 09:20:00 +0800
-categories: home other
+categories: other
 ---
 
 如果公司内网有一台windows，外网有linux主机，你在家的时候，你想通过远程桌面（mstsc）登录你公司内网的windows主机？很简单，看以下教程。

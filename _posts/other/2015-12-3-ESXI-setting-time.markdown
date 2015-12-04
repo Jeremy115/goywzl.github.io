@@ -2,7 +2,7 @@
 layout: article
 title:  "ESXI setting time"
 date:   2015-12-03 09:20:00 +0800
-categories: home other
+categories: other
 ---
 
 虚拟机服务器环境：ESXI 5.5

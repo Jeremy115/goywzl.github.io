@@ -22,11 +22,6 @@ categories: home server
 vim nginx
 
 #!/bin/sh
-#Author: Ryan Norbauer http://norbauerinc.com
-#Modified:Geoffrey Grosenbach http://topfunky.com
-#Modified:clement NEDELCU
-#Reproduced with express authorization form its contributors
-# chkconfig: - 85 15
 # description: nginx is a World Wide Web server. It is used to serve
 set -e
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin

@@ -1,15 +1,8 @@
 ---
 layout: article
 title:  "logstash elasticsearch redis Kibana"
-modified:
-categories: home server
-#excerpt:
-#tags: []
-image:
-#    feature: /teaser/xxx
-	teaser: /teaser/logstash+elasticsearch+redis+Kibana.jpg
-#    thumb:
 date:   2015-12-05 09:20:00 +0800
+categories: home server
 ---
 
 

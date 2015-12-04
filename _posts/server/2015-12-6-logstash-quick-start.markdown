@@ -1,6 +1,6 @@
 ---
 layout: article
-title:  "logstash quick start"
+title:  "Logstash Quick Start"
 date:   2015-12-06 09:20:00 +0800
 categories: home server
 ---

@@ -2,7 +2,7 @@
 layout: article
 title:  "Autossh"
 date:   2015-12-01 09:20:00 +0800
-categories: home server
+categories: server
 ---
 
 SSH反向连接及Autossh

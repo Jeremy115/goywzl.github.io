@@ -2,7 +2,7 @@
 layout: article
 title:  "nginx-start-script"
 date:   2015-12-04 09:20:00 +0800
-categories: home server
+categories: server
 ---
 
 

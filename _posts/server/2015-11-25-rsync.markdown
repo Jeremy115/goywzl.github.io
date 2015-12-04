@@ -2,7 +2,7 @@
 layout: article
 title:  "rsync"
 date:   2015-11-25 09:20:00 +0800
-categories: home server
+categories: server
 ---
 
 rsync（remote synchronize）是一个快速增量文件传输软件，它在同步文件的同时，可以保持原来文件的权限、时间、软硬链接等附加信息。

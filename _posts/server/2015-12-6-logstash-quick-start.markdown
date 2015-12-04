@@ -2,7 +2,7 @@
 layout: article
 title:  "Logstash Quick Start"
 date:   2015-12-06 09:20:00 +0800
-categories: home server
+categories: server
 ---
 
 logstash 是一个应用程序日志、事件的传输、处理、管理和搜索的平台。你可以用它来统一对应用程序日志进行收集管理，提供 Web 接口用于查询和统计。

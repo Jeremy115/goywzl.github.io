@@ -1,6 +1,7 @@
 ---
 layout: article
 title:  "logstash elasticsearch redis Kibana"
+modified:
 categories: home server
 #excerpt:
 #tags: []
@@ -33,7 +34,7 @@ logstash 主要处理两个事情，shipper和indexer。shipper 即进行日志�
 
 如此简单的原理，大家肯定都懂得！
 
-![](/images/server/logstash+elasticsearch+redis+Kibana.jpg)
+![framework](/images/server/logstash+elasticsearch+redis+Kibana.jpg)
 
 ----------
 

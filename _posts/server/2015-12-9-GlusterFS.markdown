@@ -2,7 +2,7 @@
 layout: article
 title:  "GlusterFS"
 date:   2015-12-09 09:20:00 +0800
-categories: other
+categories: server
 ---
 
 GlusterFS是一个开源的分布式文件系统,于2011年被红帽收购.它具有高扩展性、高性能、高可用性、可横向扩展的弹性特点,无元数据服务器设计使glusterfs没有单点故障隐患。

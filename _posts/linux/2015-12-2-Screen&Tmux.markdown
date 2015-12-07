@@ -263,10 +263,14 @@ tmux [-28lquvV] [-c shell-command] [-f file] [-L socket-name] [-S socket-path] [
 {% endraw %}
 {% endhighlight %}
 
-    tmux ls 查看有几个可以复用的窗口
-    tmux a -t name  进入到name的窗口 
+**举例：**
 
-快捷键参数
+	tmux new -s $session_name  创建并指定session名字
+    tmux ls 查看有几个可以复用的窗口
+    tmux a -t name  进入到已经存在的name窗口
+	tmux kill-session -t $session_name   删除指定session 
+
+**快捷键参数**
 
 tmux所有自带命令都默认需要先按`Ctrl + b`，然后再键入对应的命令
     

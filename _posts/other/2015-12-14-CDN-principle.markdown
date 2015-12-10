@@ -1,7 +1,7 @@
 ---
 layout: article
 title:  "简述CDN原理"
-date:   2015-12-13 09:20:00 +0800
+date:   2015-12-14 09:20:00 +0800
 categories: other
 ---
 

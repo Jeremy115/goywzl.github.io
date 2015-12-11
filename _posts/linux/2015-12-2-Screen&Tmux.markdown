@@ -101,7 +101,24 @@ screen [-AmRvx -ls -wipe][-d <作业名称>][-h <行数>][-r <作业名称>][-s 
     	Esc 结束 copy mode 
     C-a ] -> Paste，把刚刚在 copy mode 选定的内容贴上
 
-*小提示：如果在screen窗口上输入`exit`，则是直接退出screen，不能在切换回来，所以，请使用`screen -d`离线退出*
+*小提示1：如果在screen窗口上输入`exit`，则是直接退出screen，不能在切换回来，所以，请使用`screen -d`离线退出*
+
+曾经的那些问题：
+
+当你挂起screen，下次想连上screen的时候，有时候会出现`screen session`的状态为`Attached`而怎么连也连不上的情况。下面给出解决方法。
+
+列出状态为Attached的`session id`。
+
+{% highlight bash %}
+{% raw %}
+
+screen -ls
+screen -D  -r ＜session-id>
+
+{% endraw %}
+{% endhighlight %}
+
+解释：`-D -r `先踢掉前一用户，再登陆。
     
 ## 实例操示范 ##
 

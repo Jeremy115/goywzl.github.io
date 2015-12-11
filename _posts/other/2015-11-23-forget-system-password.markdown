@@ -59,3 +59,44 @@ categories: other
     
 重新启动后出现类似装机时的欢迎界面。根据提示重新建立一个新的管理员账号`(注意这里要换一个新的账户名称)`。然后用新的管理员账号登录进去，修改之前账户的密码，注销，切换账户即可。
 
+
+----------
+
+补充，补充，我遇到了ubuntu系统，这里有必要从新补充一下此文章
+
+更改Ubuntu系统的密码，也是重启后操作的，下面进行介绍
+
+开机，按`shift`选中第二个`advanced… `摁回车
+
+如下图操作：
+
+![ubuntu-password](/images/other/ubuntu-alter-password.jpg)
+
+到这里把光标移动到boot上。回车。
+
+1.如果passwd root 改密码报错
+
+{% highlight bash %}
+{% raw %}
+
+Authentication token manipulation error
+
+{% endraw %}
+{% endhighlight %}
+
+2.则：
+
+{% highlight bash %}
+{% raw %}
+
+chmod 666 /dev/null
+Mount –o
+remount,rw /
+Chmod 777
+/etc/passwd
+Pwconv
+
+{% endraw %}
+{% endhighlight %}
+
+3.输入这些都成功之后直接passwd更改密码，然后reboot重启即可

@@ -85,9 +85,6 @@ http_port 3128
 这样我的电脑——>管理——>服务中就有“squid”了，然后执行”squid -z”创建缓存目录，之后执行“net start squid”启动squid服务
 我都操作完了，下面是命令介绍
 
-{% highlight cmd %}
-{% raw %}
-
 Microsoft Windows [版本 6.1.7601]
 
 版权所有 (c) 2009 Microsoft Corporation。保留所有权利。
@@ -112,8 +109,6 @@ c:\squid\sbin>net start squid
 
 c:\squid\sbin>
 
-{% endraw %}
-{% endhighlight %}
 
 6.到了这里，squid算是配置完成了，现在找一台squid允许的网段的机器，打开IE，进行代理设置：internet 选项——>链接——>局域网设置——>勾选代理服务器，配置结果如下图:
 

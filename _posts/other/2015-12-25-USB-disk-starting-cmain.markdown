@@ -1,7 +1,7 @@
 ---
 layout: article
 title:  "U盘启动出现starting cmain"
-date:   2015-12-24 09:20:00 +0800
+date:   2015-12-25 09:20:00 +0800
 categories: other
 ---
 

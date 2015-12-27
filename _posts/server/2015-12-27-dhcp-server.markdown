@@ -106,6 +106,8 @@ BOOTPROTO=dhcp
 
 六．DHCP中继服务，如图所示的网络当中，如何为不同网段分配ip？
 
+![dhcp](/images/server/dhcp.jpg)
+
 七．配置DHCP中继服务器
 
 1.开启服务器的路由转发功能

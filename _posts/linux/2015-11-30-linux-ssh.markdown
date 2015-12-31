@@ -219,6 +219,149 @@ $sudo service sshd restart
 {% endraw %}
 {% endhighlight %}
 
+----------
+
+# SSH的安全配置 #
+
+ssh配置文件目录:
+
+{% highlight bash %}
+{% raw %}
+
+/etc/ssh
+
+{% endraw %}
+{% endhighlight %}
+
+1.更改ssh默认的端口:22
+
+将Port注释去掉
+
+{% highlight bash %}
+{% raw %}
+
+# vi /etc/ssh/ssh_config
+Port 3306(端口号)
+
+{% endraw %}
+{% endhighlight %}
+
+将Port注释去掉 
+
+{% highlight bash %}
+{% raw %}
+
+# vi /etc/ssh/sshd_config
+Port 3306(端口号)
+
+{% endraw %}
+{% endhighlight %}
+
+2.限制ssh用户登录次数(防止别人使用密码穷举)
+
+将MaxAuthTries注释去掉
+
+{% highlight bash %}
+{% raw %}
+
+# vi /etc/ssh/sshd_config
+MaxAuthTries 2(登录次数)
+
+{% endraw %}
+{% endhighlight %}
+
+3.限制登录用户
+
+禁止root用户使用ssh登录
+
+{% highlight bash %}
+{% raw %}
+
+# vi /etc/ssh/sshd_config
+PermitRootLogin no(原本是yes)
+
+{% endraw %}
+{% endhighlight %}
+
+只允许指定的用户登录
+
+在最后新增加一行:
+
+{% highlight bash %}
+{% raw %}
+
+# vi /etc/ssh/sshd_config
+AllowUsers nbadv(指定的用户名)
+
+{% endraw %}
+{% endhighlight %}
+
+只允许某个网段的用户登录
+
+增加
+
+{% highlight bash %}
+{% raw %}
+
+# vi /etc/hosts.deny
+sshd:ALL EXCEPT 192.168.1.0/255.255.255.0(只允许192.168.1.0的网段访问ssh)
+
+{% endraw %}
+{% endhighlight %}
+
+4.使用防火墙
+
+{% highlight bash %}
+{% raw %}
+
+iptables  -A INPUT -p tcp -m tcp –dport 3306 -j ACCEPT
+
+{% endraw %}
+{% endhighlight %}
+
+5.重启ssh服务
+
+{% highlight bash %}
+{% raw %}
+
+service sshd restart 或
+service sshd stop
+service sshd start
+
+{% endraw %}
+{% endhighlight %}
+
+6.ssh的超时时间设置
+
+1）.修改server端的etc/ssh/sshd_config
+
+{% highlight bash %}
+{% raw %}
+
+ClientAliveInterval 60 ＃server每隔60秒发送一次请求给client，然后client响应，从而保持连接
+
+ClientAliveCountMax 3 ＃server发出请求后，客户端没有响应得次数达到3，就自动断开连接，正常情况下，client不会不响应
+
+{% endraw %}
+{% endhighlight %}
+
+2）.修改client端的etc/ssh/ssh_config添加以下：（在没有权限改server配置的情形下）
+
+{% highlight bash %}
+{% raw %}
+
+ServerAliveInterval 60 ＃client每隔60秒发送一次请求给server，然后server响应，从而保持连接
+
+ServerAliveCountMax 3  ＃client发出请求后，服务器端没有响应得次数达到3，就自动断开连接，正常情况下，server不会不响应
+
+{% endraw %}
+{% endhighlight %}
+
+3）.另一种方式：
+ 
+不修改配置文件
+
+在命令参数里`ssh -o ServerAliveInterval=60` 这样子只会在需要的连接中保持持久连接， 毕竟不是所有连接都要保持持久的
 
 关于ssh的我用到的，就先说到这。如有补充，请留言，谢谢
 

@@ -478,3 +478,40 @@ ACCEPT icmp — anywhere anywhere icmp echo-request limit: avg 1/sec burst 5
 
 {% endraw %}
 {% endhighlight %}
+
+
+# iptables实现ip与mac绑定 #
+
+利用linux系统下的`iptables + tc`实现企业的网关路由功能及防火墙功能是十分强大的。其可以实现内容过虑、IP限速、端口映射等一切商用企业中能实现的功能。依赖于linux自身的稳定性，其能保证长时间稳定运行而不需要关机。而要实现IP和mac的强制绑定，当然也不在话下。
+
+本人公司办公网络就是利用`iptables+dhcpd+tc`实现的IP分组+流量限制。不过因为之前没有做IP和mac的强制绑定，一些不自觉的人私自更改IP并且使用迅雷下载，导致影响其他人上网。为了便于管理，决定在iptables上新增ip-mac绑定，这样便于在ntop里查到有人使用吸血下载时，可以直接定位到某人。
+
+实现原理很简单，利用脚本自动去读取dhcpd配置里ip和mac的对应关系，利用`iptables -A FORWARD -s 192.168.1.8  -m mac –mac-source 30:83:AE:9F:67:74  -j ACCEPT`这样的配置实现即可，而一旦dhcpd.conf中新增其他配置时，只需要重新运行下这个脚本就行了。而对外来人员使用的临时组（给的带宽和权重自然是最低的了）上网不做IP和mac限制。
+
+读取dhcpd.conf文件实现IP和mac绑定的脚本为：
+
+{% highlight bash %}
+{% raw %}
+
+awk '/hardware|fixed-address/' /etc/dhcpd.conf|grep -v ^#|awk '{ print $NF}'|awk '{if(NR%2==0){printf("%sn",$1)}else{printf("%s",$1)}}'|awk -F";" '{ print "iptables -A FORWARD -s",$2," -m mac --mac-source",$1," -j ACCEPT" }'|bash
+  
+{% endraw %}
+{% endhighlight %}
+
+
+注：以上配置只是一行，另外每个关于mac和IP的配置同每行末尾的分号之间不能有空格。有空格的话print $NF的值就是分号了。
+
+当然，仅仅以上配置还不能实现完全绑定的。这样另外私改IP时，网关接收到客户端发来的上网请求时还是会接受的。这时候再对每个IP段配置一个总的DROP就行了。只有mac和IP对应上的才能上网，对应不上不允许上网。需新增的部分如下：
+
+{% highlight bash %}
+{% raw %}
+
+iptables -A FORWARD -s 192.168.1.0/24 -j DROP
+iptables -A FORWARD -s 192.168.10.0/24 -j DROP
+iptables -A FORWARD -s 192.168.20.0/24 -j DROP
+iptables -A FORWARD -s 192.168.30.0/24 -j DROP
+ 
+{% endraw %}
+{% endhighlight %}
+
+当然，具体以各自dhcpd中分的段再适当修改。其中的我的临时组为192.168.0.0/24网段，未做DROP设置。

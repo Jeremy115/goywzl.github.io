@@ -1,7 +1,7 @@
 ---
 layout: article
 title:  "zabbix explain"
-date:   2016-01-02 09:20:00 +0800
+date:   2016-01-04 09:20:00 +0800
 categories: linux
 ---
 

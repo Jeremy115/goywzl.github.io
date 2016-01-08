@@ -1,0 +1,195 @@
+---
+layout: article
+title:  "Make Nginx 404.html"
+date:   2016-01-11 09:20:00 +0800
+categories: server
+---
+
+# 制作Nginx转发错误页面 #
+
+1.创建自己的404.html页面
+
+2.更改nginx.conf在http定义区域加入：
+
+{% highlight bash %}
+{% raw %}
+
+fastcgi_intercept_errors on;
+
+{% endraw %}
+{% endhighlight %}
+
+3.更改nginx.conf在server 区域加入：
+
+{% highlight bash %}
+{% raw %}
+
+error_page 404 = /404.html
+
+{% endraw %}
+{% endhighlight %}
+
+4.测试nginx.conf正确性：
+
+{% highlight bash %}
+{% raw %}
+
+/opt/nginx/sbin/nginx –t
+
+{% endraw %}
+{% endhighlight %}
+
+如果正确应该显示如下信息：
+
+ 
+{% highlight bash %}
+{% raw %}
+
+
+the configuration file /opt/nginx/conf/nginx.conf syntax is ok
+configuration file /opt/nginx/conf/nginx.conf test is successful
+ 
+
+kill -HUP  `cat /opt/nginx/nginx.pid `
+
+{% endraw %}
+{% endhighlight %}
+
+
+配置文件实例：
+
+{% highlight bash %}
+{% raw %}
+
+ server
+   {
+   listen       80;
+   server_name  www.XXX.com ;
+   index index.html index.htm index.php;
+   root  /opt/www/;
+   location ~ .*.(php|php5)?$
+   {
+     #fastcgi_pass  unix:/tmp/php-cgi.sock;
+     fastcgi_pass  127.0.0.1:9000;
+     fastcgi_index index.php;
+     include fcgi.conf;
+   }
+   error_page  404 = /404.html;
+ 
+
+{% endraw %}
+{% endhighlight %}
+
+502 等错误可以用同样的方法来配置。
+
+{% highlight bash %}
+{% raw %}
+
+error_page   500 502 503 504 = /50x.html;
+  location = /50x.html {
+            root   html;
+        }
+   log_format  65  ‘$remote_addr – $remote_user [$time_local] "$request" ‘
+              ‘$status $body_bytes_sent "$http_referer" ‘
+              ‘"$http_user_agent" $http_x_forwarded_for’;
+   access_log  /opt/nginx/logs/65.log  65;
+}
+ 
+
+{% endraw %}
+{% endhighlight %}
+
+*注意事项：*
+
+1.必须要添加：`fastcgi_intercept_errors on`; 如果这个选项没有设置，即使创建了404.html和配置了error_page也没有效果。
+
+`fastcgi_intercept_errors` 语法: fastcgi_intercept_errors on|off 默认: fastcgi_intercept_errors off 添加位置: http, server, location 默认情况下，nginx不支持自定义404错误页面，只有这个指令被设置为on，nginx才支持将404错误重定向。
+
+这里需要注意的是，并不是说设置了fastcgi_intercept_errors on，nginx就会将404错误重定向。在nginx中404错误重定向生效的前提是设置了
+
+fastcgi_intercept_errors on,并且正确的设置了error_page这个选项（包括语法和对应的404页面)
+
+
+2.不要出于省事或者提高首页权重的目的将首页指定为404错误页面，也不要用其它方法跳转到首页。
+
+3.自定义的404页面必须大于512字节，否则可能会出现IE默认的404页面。例如，假设自定义了404.html,大小只有11个字节（内容为：404错误）。
+
+
+----------
+
+
+# nginx404错误页面指向 #
+
+平时因为公司的站点经常会配置到nginx的默认错误页面指向，以前只看到通过下面的方法进行配置：
+
+{% highlight bash %}
+{% raw %}
+
+server
+{
+listen 80;
+server_name www.abc.com;
+index index.html index.htm index.php;
+root /opt/wwwroot;
+error_page 500 502 404 /errorpage/404.html;
+#下面内容省略
+}
+
+{% endraw %}
+{% endhighlight %}
+
+但是我的404页面里因为有图片加载，显示的是红叉叉。通过查看源代码，发现图片指向的是/opt/wwwroot路径，而图片放置的目录在/errorpage目录里。
+
+如果通过rewrite配置肯定是可以实现的图片显示的，这是毫无疑问的。不过每次如果因为几个图片就非得去写rewrite岂不是很麻烦。
+
+直接url指向。配置方件改成下面的：
+
+{% highlight bash %}
+{% raw %}
+
+server
+{
+listen 80;
+server_name www.abc.com;
+index index.html index.htm index.php;
+root /opt/wwwroot;
+error_page 500 502 404 http://www.abc.com/errorpage/404.html;
+#下面内容省略
+}
+
+{% endraw %}
+{% endhighlight %}
+
+测试配置文件ok，再重新reload配置文件，发现之前的红叉叉显示成了图片。OK，susuccessful ！
+
+之再看nginx error_page参数：
+
+在对公司站点进行新一轮的优化时，发现了一个问题：同样都配置了error_page ，但两个不同的页面报的错不一样，一个是直接返回的是nginx的默认错误页，而另一个报的是指向的错误页。
+
+为了快速定位出错的原因，首先理了下公司web的访问路由，不外乎如下两种：其一，nginx ——> squid ——–> nginx ——–> 静态文件 ；其二，nginx ——-> nginx ———> tomcat 。
+
+通过对两者nginx的对比，得出如下结论：决定error_page页面展现的有四个因素 ————— 前端nginx配置，后端nginx配置，error_page使用相对路径，error_page使用URL 。当请求到达后端nginx时，返回的错误由后端返回。这时前端的配置就显的无关重要，而达不到后端时，返回的错误就由前端nginx返回 。
+
+所以如果前端nginx只是做转发用的，强烈建议将其error_page页面配置成URL ，这样就不会造成error_page找不到相关页面而报最原始的错误（不过此处有一个问题，就是返回的http_code 不会是404、503之类的，不便于定位问题，而且不会显示出错页面的URL而直接跳转到像www.goywzl.com/errorpage.html之样的定义页面上）；而后端强烈建议使用相对路径的页面，这样一但页面出错，还原显示原出错http_code ，而且访问的出错地址也不会是301或302跳转的错误页的URL （如：www.goywzl.com/aaa.html出错，还是停留在该URL界面，而内容是error_page的内容）。
+
+而为了分析问题，解决上面提到的前端nginx返回error_page的问题，可以让其在出错URL后面跟上错误代码和请求的URL，这样便于数据分析，一目了解是那个页面出错，http_code是什么 。具体调整为如下：
+
+{% highlight bash %}
+{% raw %}
+
+error_page      500 502 503 404  http://www.test.com/errorpage/error.html?t=$status&u=$host$request_uri;
+
+{% endraw %}
+{% endhighlight %}
+
+这样再错时就会在error_page后面显示http_code 和出错页面 。
+
+注：动态页面不生效时（如 php），需要配置在nginx里增加如下配置：
+
+{% highlight bash %}
+{% raw %}
+
+fastcgi_intercept_errors on;
+
+{% endraw %}
+{% endhighlight %}

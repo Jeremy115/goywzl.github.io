@@ -1,7 +1,7 @@
 ---
 layout: article
 title:  "Make Nginx 404.html"
-date:   2016-01-11 09:20:00 +0800
+date:   2016-01-12 09:20:00 +0800
 categories: server
 ---
 

@@ -316,3 +316,57 @@ limit_rate 10k;
 *总结：*
 
 nginx以按默认方式编译安装的话自动会带以上两个模块的，不像apache需要通过编译时指定或动态加载第三方模块。从配置上来看，nginx的配置比较比较简洁，但功能上不如apache的mod_bw模块丰富。
+
+----------
+
+# Nginx查看并发访问量 #
+
+apache下有mod_status和mod_info模块用于查看apache的运行状态。nginx是不是也带有相同的模块呢？答案当然是肯定的。
+
+编译时只需要加上`–with-http_stub_status_module `参数即可在安装时编译出HttpStubStatusModule模块（不需要记，默认情况下都会自动加该参数的）。
+
+安装完成后，可以通过`stub_status on`开启状态查看项。当然如果想设置的更安全些，可以增加上IP控制和密码认证。具体配置如下：
+
+{% highlight bash %}
+{% raw %}
+
+location /nginx-status {
+stub_status on;
+auth_basic "NginxStatus";
+allow 127.0.0.1;
+deny all;
+access_log off
+auth_basic_user_file /App/nginx/conf/htpasswd;
+} 
+
+{% endraw %}
+{% endhighlight %}
+
+注：密码文件的生成需要依赖apache的htpasswd工具生成。
+
+配置完成后，在浏览器中输入`http://127.0.0.1/nginx-status` 输入用户名密码，即可查看nginx的当前状态，示例如下：
+
+{% highlight bash %}
+{% raw %}
+
+Active connections: 9787
+server accepts handled requests
+ 515611486 515611486 1487172614
+Reading: 208 Writing: 331 Waiting: 9248
+
+{% endraw %}
+{% endhighlight %}
+
+而各个参数含义如下：
+
+`reading — nginx `读取到客户端的 Header 信息数。
+
+`writing — nginx `返回给客户端的 Header 信息数。
+
+waiting — 开启 keep-alive 的情况下，这个值等于 active – (reading + writing)，意思就是 Nginx 已经处理完正在等候下一次请求指令的驻留连接。
+
+而从我上面的服务器状态上来看，nginx的waitng状态非常高，后来我到网上查到了资料并结合自己的分析，发现这是正常的。网上一些资料显示：在访问效率高,请求很快被处理完毕的情况下,Waiting数比较多是正常的 。
+
+而我自己的本机只做nginx proxy转发，不负责数据处理。所以处理效率当然是非常高的。而从官方给出的waiting参数的意思上看来，是已经完成数据的处理。即已经将数据返回给用户，而停留在该状态是等待下一次的连接或都连接超时中断。（不知道这样理解对不对，希望大牛板砖）
+
+需要注意的是如果reading或writing的值很高，说明正在处理的数据量很大，可能是因为后端的动态就用程序处理慢（如php、jsp) ，拖了后腿。而一般来说,动态应用之后以慢。一般有两方面的原因，一是因为数据库,另一个原因很可能就是IO慢（目前的机器CPU或内存不够用的情况很少，毕竟这玩意廉价。而设备的主要瓶颈在硬盘IO上）,或者客户端的网络。

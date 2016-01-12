@@ -1,11 +1,13 @@
 ---
 layout: article
-title:  "Nginx三种简单的防攻击方法"
+title:  "Nginx一些简单配置"
 date:   2015-12-19 09:20:00 +0800
 categories: server
 ---
 
-# ngx_http_limit_conn_module 可以用来限制单个IP的连接数： #
+# 三种简单的防攻击方法 #
+
+## ngx_http_limit_conn_module 可以用来限制单个IP的连接数： ##
 
 **ngx_http_limit_conn_module **模块可以按照定义的键限定每个键值的连接数。特别的，可以设定单一 IP 来源的连接数。
 
@@ -123,7 +125,7 @@ alias /data/www.ttlsa.com/download/;
 
 如前端如果有做LVS或反代，而我们后端启用了该模块功能，那不是非常多503错误了？这样的话，可以在前端启用该模块，要么就是设置白名单，白名单设置参见后续的文档，我会整理一份以供读者参考。
 
-# ngx_http_limit_req_module 可以用来限制单个IP每秒请求数 #
+## ngx_http_limit_req_module 可以用来限制单个IP每秒请求数 ##
 
 ngx_http_limit_req_module模块(0.7.21)可以通过定义的键值来限制请求处理的频率。特别的，它可以限制来自单个IP地址的请求处理频率。限制的方法是通过一种“漏桶”的方法——固定每秒处理的请求数，推迟过多的请求处理。
 
@@ -209,7 +211,7 @@ alias /data/www.ttlsa.com/download/;
 
 可能要对某些IP不做限制，需要使用到白名单
 
-# nginx_limit_speed_module 可以用来对IP限速 #
+## nginx_limit_speed_module 可以用来对IP限速 ##
 
 该模块能够限制从一个地址同时连接的总速度。
 
@@ -266,3 +268,51 @@ limit_speed www_ttlsa_com 100k;
 
 {% endraw %}
 {% endhighlight %}
+
+----------
+
+# Nginx下载限速配置 #
+
+Nginx可以通过`HTTPLimitZoneModule`和`HTTPCoreModule`两个模块来实现对目录和IP进行下载限速。
+
+先来一个配置示例看下：
+
+{% highlight bash %}
+{% raw %}
+
+limit_zone one $binary_remote_addr 10m;
+server {
+listen       80;
+server_name  test.361way.com;
+location / {
+root   /var/www/html;
+index  index.html index.htm index.php;
+autoindex on;
+autoindex_exact_size off;
+autoindex_localtime on;
+limit_conn one 2;
+limit_rate 10k;
+}
+
+{% endraw %}
+{% endhighlight %}
+
+该配置中分了两部分。上面一部分用到了模块HTTPLimitZoneModule的用法。
+
+上面的配置中定义了一个名字为one大小为10M的容器，用于存储每个IP的session状态。该容器的大小要求大于等于32K，即每个session的大小为大于等于32k。按本例中10M大小来算，可以处理320000个session 。
+
+配置完该容器后，HTTPLimitZoneModule模块下还有另外一个参数limit_conn，配合limit_zone参数使用。
+
+如本例中，指定了one容器中，限制每个IP只能发起来两个连接。HTTPLimitZoneModule模块的详细用法可以参看其官方wiki页面。
+
+本示例中的配置是只针对根目录的。如果要对其他目录设置，改为其应的location /path 即可。
+
+下面接着看第二部分，即HTTPCoreModule模块部分。该模块所该的参数比较多。但对于速度方面的限制主要为limit_rate参数。该参数用于限制每个连接的速度大小。
+
+本例中限制每个连接的最大下限速度为10k/s 。不过本例中对于每个IP的下载速度的峰值是多大呢？
+
+很简间，单个IP的最大连接为2，每个连接的最大速度为10k，每个IP的最大速度即为：10k * 2 = 20k/s 。HTTPCoreModule模块的其他用法，也可以参看该模块的官方wiki 。
+
+*总结：*
+
+nginx以按默认方式编译安装的话自动会带以上两个模块的，不像apache需要通过编译时指定或动态加载第三方模块。从配置上来看，nginx的配置比较比较简洁，但功能上不如apache的mod_bw模块丰富。

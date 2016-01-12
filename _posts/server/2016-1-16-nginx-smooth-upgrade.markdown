@@ -7,6 +7,22 @@ categories: server
 
 nginx本身支持平滑升级，这已不是什么新鲜事。不过在对现上环境操作时我们总是慎之又慎，生错出现一丁点的问题。
 
+nginx平滑升级的原理
+
+平滑升级，基本上都是用新的二进制文件替换旧的二进制文件
+
+Nginx想到了这一点，允许你切换二进制文件而不中断正常运行时间，实现0%的请求丢失。
+
+下面介绍详细的操作步骤：
+
+    1.用新的二进制文件，替换旧的二进制文件
+    2.找到Nginx的master进程的pid（ps x | grep nginx |grep master，或者查找pid文件）
+    3.然后给master进程发送一个USR2的信号，方法：kill -USR2 ***,***替换为第（2）骤得到的pid，这将开始升级，对旧的.pid文件重命名，进行新的二进制文件
+    4.发送一个WINCH信号到旧的master进程，方法：kill -WINCH ***,***替换为第（2）步骤中得到的pid，这将使旧的worker进程平滑关闭
+    5.确定所有旧的worker进程都已经终止，然后再给旧的master进程发送QUIT信号，方法：kill -QUIT ***，***替换为第（2）步骤中找到的pid，到了这里，你在进行ps x | grep nginx 查看，就看到新的nginx进程了，你成功了。
+
+----------
+
 公司的一个web入口运行的nginx是N年前的旧版本。一直没有升级，很长一段时间打开网站时，偶尔会出现一下 502 的毛病（F5刷新会发现又正常了，怀疑是nginx早期版本的bug），同时又出于安全方面的考量。决定将其升级为最新的tengine 。
 
 ### 1、下载升级所用到的源码包文件 ###
@@ -49,7 +65,7 @@ tar jvxf jemalloc-3.3.1.tar.bz2
 
 ### 4、修改tengine的源文件 ###
 
-出去安全考虑，要隐藏tengine的版本 。要改动的两个源文件同nginx相同，分别是`src/core/nginx.h`和`src/http/ngx_http_header_filter_module.c`两个文件 。
+出于安全考虑，要隐藏tengine的版本 。要改动的两个源文件同nginx相同，分别是`src/core/nginx.h`和`src/http/ngx_http_header_filter_module.c`两个文件 。
 
 ### 5、编译 ###
 

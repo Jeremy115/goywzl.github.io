@@ -400,3 +400,130 @@ waiting — 开启 keep-alive 的情况下，这个值等于 active – (reading
 最后，就是查看自己是否成功了 `/usr/local/nginx/sbin/nginx -V`查看新编译的模块是否出现
 
 至此，算是重新编译完成
+
+
+----------
+
+# Nginx认证登录 #
+
+大家都知道apache自带认证登录功能，那nginx如何添加认证登录呢。
+首先安装htpasswd命令
+
+{% highlight bash %}
+{% raw %}
+
+Yum install httpd
+
+{% endraw %}
+{% endhighlight %}
+
+然后创建密码文件
+
+{% highlight bash %}
+{% raw %}
+
+htpasswd -c /usr/local/nginx/passwd.db xiaohui （xiaohui代表用户名）
+chmod 400 /usr/local/nginx/passwd.db  //修改网站认证数据库权限
+chown nginx.  /usr/local/nginx/passwd.db  //修改网站认证数据库属主和属组
+cat /usr/local/nginx/passwd.db  //可以看到通过htpasswd生成的密码为加密格式
+
+{% endraw %}
+{% endhighlight %}
+
+之后在nginx配置文件中添加密码认证功能
+
+如：
+
+{% highlight bash %}
+{% raw %}
+
+location /{
+root   html;
+index  index.html index.htm;
+auth_basic “Restricted”;       //虚拟主机认证命名
+auth_basic_user_file /usr/local/nginx/passwd.db;   //虚拟主机用户名密码认证数据库(也就是上面的文件)
+}
+
+{% endraw %}
+{% endhighlight %}
+
+`apache htpasswd`选项参数
+
+    htpasswd [-cmdpsD] passwordfile username
+    htpasswd -b[cmdpsD] passwordfile username password
+    htpasswd -n[mdps] username
+    htpasswd -nb[mdps] username password
+
+`apache htpasswd`命令选项参数说明
+
+-c 创建一个加密文件
+    -n 不更新加密文件，只将apache htpasswd命令加密后的用户名密码显示在屏幕上
+    -m 默认apache htpassswd命令采用MD5算法对密码进行加密
+    -d apache htpassswd命令采用CRYPT算法对密码进行加密
+    -p apache htpassswd命令不对密码进行进行加密，即明文密码
+    -s apache htpassswd命令采用SHA算法对密码进行加密
+    -b 在apache htpassswd命令行中一并输入用户名和密码而不是根据提示输入密码
+    -D 删除指定的用户
+
+在Windows, NetWare and TPF 系统中 ‘-m’选项是默认的，在使用apache htpasswd命令时可以忽略。在其他系统中，’-p’选项可能不能工作。
+
+### apache htpasswd例子 ###
+
+1、如何利用htpasswd命令添加用户？
+
+{% highlight bash %}
+{% raw %}
+
+htpasswd -bc .passwd tonyzhang pass
+
+{% endraw %}
+{% endhighlight %}
+
+在bin目录下生成一个.passwd文件，用户名tonyzhang ，密码：pass，默认采用MD5加密方式
+
+2、如何在原有密码文件中增加下一个用户？
+
+{% highlight bash %}
+{% raw %}
+
+htpasswd -b .passwd onlyzq pass
+
+{% endraw %}
+{% endhighlight %}
+
+去掉c选项，即可在第一个用户之后添加第二个用户，依此类推
+
+3、如何不更新密码文件，只显示加密后的用户名和密码？
+
+{% highlight bash %}
+{% raw %}
+
+htpasswd -nb tonyzhang pass
+
+{% endraw %}
+{% endhighlight %}
+
+不更新.passwd文件，只在屏幕上输出用户名和经过加密后的密码
+
+4、如何利用htpasswd命令删除用户名和密码？
+
+{% highlight bash %}
+{% raw %}
+
+htpasswd -D .passwd tonyzhang
+
+{% endraw %}
+{% endhighlight %}
+
+5、如何利用htpasswd命令修改密码？
+
+{% highlight bash %}
+{% raw %}
+
+htpasswd -D .passwd tonyzhang
+htpasswd -b .passwd tonyzhang pass
+
+{% endraw %}
+{% endhighlight %}
+
+即先使用htpasswd删除命令删除指定用户，再利用htpasswd添加用户命令创建用户即可实现修改密码的功能。

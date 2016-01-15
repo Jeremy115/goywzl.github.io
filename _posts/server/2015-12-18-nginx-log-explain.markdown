@@ -90,3 +90,41 @@ keeps times of responses obtained from upstream servers; times are kept in secon
 所以如果用户网络较差，或者传递数据较大时，$request_time会比$upstream_response_time大很多。
 
 所以如果使用nginx的accesslog查看php程序中哪些接口比较慢的话，记得在log_format中加入$upstream_response_time
+
+----------
+
+前面介绍了Nginx访问日志参数，这里面介绍以下错误日志Error.log怎么看，其中都有哪些参数需要注意的
+
+### error_log指令 ###
+
+语法: error_log file | stderr | syslog:server=address[,parameter=value] [debug | info | notice | warn | error | crit | alert | emerg];
+
+    默认值: error_log logs/error.log error;
+    配置段: main, http, server, location
+
+### 配置错误日志。 ###
+
+错误日志[Error.log]文件内容介绍
+<table>
+<tr><td>错误信息</td> <td>错误说明</td></tr>
+<tr><td>“upstream prematurely（过早的）closed connection”</td> <td>请求uri的时候出现的异常，是由于upstream还未返回应答给用户时用户断掉连接造成的，对系统没有影响，可以忽略</td></tr>
+<tr><td>“recv() failed (104: Connectionresetby peer)”</td> <td>（1）服务器的并发连接数超过了其承载量，服务器会将其中一些连接Down掉； （2）客户关掉了浏览器，而服务器还在给客户端发送数据； （3）浏览器端按了Stop</td></tr>
+<tr><td>“(111: Connection refused)whileconnecting to upstream”</td> <td>用户在连接时，若遇到后端upstream挂掉或者不通，会收到该错误</td></tr>
+<tr><td>“(111: Connection refused)whilereading response header from upstream”</td> <td>用户在连接成功后读取数据时，若遇到后端upstream挂掉或者不通，会收到该错误</td></tr>
+<tr><td>“(111: Connection refused) whilesending request to upstream”</td> <td>Nginx和upstream连接成功后发送数据时，若遇到后端upstream挂掉或者不通，会收到该错误</td></tr>
+<tr><td>“(110: Connection timed out)whileconnecting to upstream”</td> <td>nginx连接后面的upstream时超时</td></tr>
+<tr><td>“(110: Connection timed out) whilereading upstream”</td> <td>nginx读取来自upstream的响应时超时</td></tr>
+<tr><td>“(110: Connection timed out) whilereading response header from upstream”</td> <td>nginx读取来自upstream的响应头时超时</td></tr>
+<tr><td>“SSL_do_handshake() failed”</td> <td>SSL握手失败</td></tr>
+<tr><td>“(104: Connection reset bypeer)whileconnecting to upstream”</td> <td>upstream发送了RST，将连接重置</td></tr>
+<tr><td>“upstream sent invalid header whilereading response header from upstream”</td> <td>upstream发送的响应头无效</td></tr>
+<tr><td>“upstream sent no valid HTTP/1.0header whilereading responseheaderfrom upstream”</td> <td>upstream发送的响应头无效</td></tr>
+<tr><td>“client intended to sendtoo large body”</td> <td>用于设置允许接受的客户端请求内容的最大值，默认值是1M，client发送的body超过了设置值</td></tr>
+<tr><td>“reopening logs”</td> <td>	用户发送kill  -USR1命令</td></tr>
+<tr><td>“gracefully shutting down”,</td> <td>	用户发送kill  -WINCH命令</td></tr>
+<tr><td>“no servers are inside upstream”</td> <td>upstream下未配置server</td></tr>
+<tr><td>“no live upstreams whileconnectingto upstream”</td> <td>upstream下的server全都挂了</td></tr>
+<tr><td>“could not add new SSLsessiontothesession cache whileSSLhandshaking”</td> <td>ssl_session_cache大小不够等原因造成</td></tr>
+<tr><td>“ngx_slab_alloc() failed: nomemoryinSSL session shared cache”</td> <td>ssl_session_cache大小不够等原因造成</td></tr>
+</table>
+	 

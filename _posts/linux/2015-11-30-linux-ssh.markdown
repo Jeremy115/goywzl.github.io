@@ -214,10 +214,50 @@ $sudo service sshd restart
 {% highlight bash %}
 {% raw %}
 
-执行： ssh-agent bash
+ssh-agent bash
 
 {% endraw %}
 {% endhighlight %}
+
+----------
+
+# SSH快捷登录 #
+
+所谓ssh快捷登录，就是你在使用ssh的时候，你需要输入IP地址，有的会输入用户名，比如我，还有的会在属于一个-p端口号，然后ssh快捷登录则不需要输入这些。
+
+我这里一个方法，配置太简单了，方法也很简单，配过无密码登录的都知道.ssh这个目录。
+
+首先创建文件config
+
+{% highlight bash %}
+{% raw %}
+
+vim ~/.ssh/config
+
+Host test1
+	hostname 192.168.1.100
+	user test1
+	port 3336
+Host test2
+	hostname 192.168.1.110
+	user test2
+	port 22
+
+{% endraw %}
+{% endhighlight %}
+
+保存文件之后，需要更改一下文件权限问题
+
+{% highlight bash %}
+{% raw %}
+
+chmod 755 ~/.ssh/config
+
+{% endraw %}
+{% endhighlight %}
+
+那，如此简单，这就完成了
+你现在只需要 `ssh test1` 就相当于 `ssh -p 3336 test1@192.168.1.100`
 
 ----------
 

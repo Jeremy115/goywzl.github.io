@@ -7,7 +7,8 @@ categories: script
 
 昨日朋友跟我说，他有一个文本，文本内容是连续的数字，一个数字占用一行，总共四万多个数字，如下图：
 
-continuous_number
+![continuous_number](/images/script/continuous_number.jpg)
+
 
 他让我帮忙想想办法找到其中不连续的，当时的第一想法，当然是用shell，后来用shell也写了出来
 
